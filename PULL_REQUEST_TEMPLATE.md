@@ -1,3 +1,5 @@
+## Delete before submitting
+
 **IMPORTANT: Please do not create a Pull Request without creating an issue first.**
 
 *Any change needs to be discussed before proceeding. Failure to do so may result
@@ -34,6 +36,8 @@ Put `closes #XXXX` in your comment to auto-close the issue that your PR fixes
 
 ---
 
+## End delete before submitting
+
 Fixes #XXXX
 
 ## Proposed changes
@@ -49,17 +53,16 @@ Fixes #XXXX
 Demonstrate the code is solid. Example: The exact commands you ran and their output,
 screenshots / videos if the pull request changes UI.
 
-*Make sure tests pass on all of the [relevant CI workflows](https://github.com/filipdutescu/modern-cpp-template/actions).*
+*Make sure tests pass on all of the [relevant CI workflows](https://github.com/filipdutescu/uavpc/actions).*
 
 ### Pull Request Readiness Checklist
 
-See details at [CONTRIBUTING.md](https://github.com/filipdutescu/modern-cpp-template/blob/master/CONTRIBUTING.md).
+See details at [CONTRIBUTING.md](https://github.com/filipdutescu/uavpc/blob/master/CONTRIBUTING.md).
 
-* [ ] I agree to contribute to the project under [INSERT PROJECT NAME] (Unlicense)
-[License](LICENSE).
+* [ ] I agree to contribute to the project under UAVPC (Unlicense) [License](LICENSE).
 
 * [ ] To the best of my knowledge, the proposed patch is not based on a code under
-GPL or other license that is incompatible with [INSERT PROJECT NAME]
+GPL or other license that is incompatible with UAVPC
 
 * [ ] The PR is proposed to proper branch
 

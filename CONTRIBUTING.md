@@ -1,16 +1,16 @@
-# Contributing to [INSERT PROJECT NAME]
+# Contributing to UAVPC (Unmanned Aerial Vehicle Pose-based Control)
 
-The [INSERT PROJECT NAME] team encourages community feedback and contributions.
-Thank you for your interest in making [INSERT PROJECT NAME] better! There are several
-ways you can get involved.
+The Unmanned Aerial Vehicle Pose-based Control (further referenced as UAVPC)
+team encourages community feedback and contributions. Thank you for your
+interest in making UAVPC better! There are several ways you can get involved.
 
 If you are looking for a good way to contribute to the project, please:
 
-* have a look at the [available issue templates](https://github.com/filipdutescu/modern-cpp-template/issues/new/choose)
-and checkout the [examples of good first issues](https://github.com/filipdutescu/modern-cpp-template/contribute)
-(or [click here](https://github.com/filipdutescu/modern-cpp-template/labels/good%20first%20issue)).
+* have a look at the [available issue templates](https://github.com/filipdutescu/uavpc/issues/new/choose)
+and checkout the [examples of good first issues](https://github.com/filipdutescu/uavpc/contribute)
+(or [click here](https://github.com/filipdutescu/uavpc/labels/good%20first%20issue)).
 
-* look through the [issues that need help](https://github.com/filipdutescu/modern-cpp-template/labels/help%20wanted).
+* look through the [issues that need help](https://github.com/filipdutescu/uavpc/labels/help%20wanted).
 
 * take a look at a [Pull Request template](PULL_REQUEST_TEMPLATE.md) to get yourself
 started.
@@ -18,27 +18,27 @@ started.
 ## Reporting issues and suggesting new features
 
 If you find that the project is not working properly, please file a report using
-the [Bug Report template](https://github.com/filipdutescu/modern-cpp-template/issues/new?assignees=&labels=bug&template=bug_report.md&title=[BUG]).
+the [Bug Report template](https://github.com/filipdutescu/uavpc/issues/new?assignees=&labels=bug&template=bug_report.md&title=[BUG]).
 Should the template provided not suit your needs, feel free to make a
-[custom Bug Report](https://github.com/filipdutescu/modern-cpp-template/issues/new/choose),
+[custom Bug Report](https://github.com/filipdutescu/uavpc/issues/new/choose),
 but please label it accordingly.
 
-We are happy to hear your ideas for how to further improve [INSERT PROJECT NAME],
-ensuring it suits your needs. Check the [Issues](https://github.com/filipdutescu/modern-cpp-template/issues)
+We are happy to hear your ideas for how to further improve UAVPC,
+ensuring it suits your needs. Check the [Issues](https://github.com/filipdutescu/uavpc/issues)
 and see if others have submitted similar feedback. You can upvote existing feedback
-(using the thumbs up reaction/by commenting) or [submit a new suggestion](https://github.com/filipdutescu/modern-cpp-template/labels/feature).
+(using the thumbs up reaction/by commenting) or [submit a new suggestion](https://github.com/filipdutescu/uavpc/labels/feature).
 
-We always look at upvoted items in [Issues](https://github.com/filipdutescu/modern-cpp-template/issues)
+We always look at upvoted items in [Issues](https://github.com/filipdutescu/uavpc/issues)
 when we decide what to work on next. We read the comments and we look forward to
 hearing your input.
 
 ## Finding issues you can help with
 
 Looking for something to work on?
-Issues marked [`good first issue`](https://github.com/filipdutescu/modern-cpp-template/labels/good%20first%20issue)
+Issues marked [`good first issue`](https://github.com/filipdutescu/uavpc/labels/good%20first%20issue)
 are a good place to start.
 
-You can also check the [`help wanted`](https://github.com/filipdutescu/modern-cpp-template/labels/help%20wanted)
+You can also check the [`help wanted`](https://github.com/filipdutescu/uavpc/labels/help%20wanted)
 tag to find other issues to help with. If you're interested in working on a fix,
 leave a comment to let everyone know and to help avoid duplicated effort from others.
 
@@ -142,9 +142,13 @@ Manual test cases should be used where automated testing is not feasible.
 The core principle of the project, when it comes to Git workflows is that the
 `master` branch should always be in a healthy state which is ready for release.
 Every commit on master should be deployable on push. To ensure this, pull request
-**must not** be made directly on master. **Each change** should either be made in
-the **development branch** (named a variation of development, i.e. `dev`) or in a
-separate branch, named as a short summary of the change.
+**must not** be made directly on master. **Each change** should be made in the
+in a separate branch, named as a short summary of the change.
+
+This project uses the
+[Gitflow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+design to manage the project. Please make sure you are familiar with it before submitting
+any changes.
 
 If your change is complex, please clean up the branch history before submitting a
 pull request. You can use [git rebase](https://git-scm.com/book/en/v2/Git-Branching-Rebasing)
@@ -181,7 +185,7 @@ community may participate in the review, but at least one member of the project 
 will ultimately approve the request.
 
 Often, multiple iterations or discussions will be needed to responding to feedback
-from reviewers. Try looking at [past pull requests](https://github.com/filipdutescu/modern-cpp-template/pulls?q=is%3Apr+is%3Aclosed)
+from reviewers. Try looking at [past pull requests](https://github.com/filipdutescu/uavpc/pulls?q=is%3Apr+is%3Aclosed)
 to see what the experience might be like.
 
 ## Contributor License Agreement

@@ -1,5 +1,5 @@
 set(sources
-    src/tmp.cpp
+    src/uavpc/drone/controller.cpp
 )
 
 set(exe_sources
@@ -8,5 +8,5 @@ set(exe_sources
 )
 
 set(headers
-    include/project/tmp.hpp
+    include/uavpc/drone/controller.hpp
 )
