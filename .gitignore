@@ -1,3 +1,6 @@
+compile_commands.json
+.clangd/*
+
 [Bb]uild/*
 [Dd]ocs/*
 CMakeCache.*

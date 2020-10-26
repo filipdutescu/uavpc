@@ -2,9 +2,9 @@ name: MacOS
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 env:
   BUILD_TYPE: Release
@@ -37,7 +37,7 @@ jobs:
         cmake --build build --target install --config Release
 
     - name: configure
-      run: cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/$INSTALL_LOCATION
+      run: cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/$INSTALL_LOCATION -Duavpc_ENABLE_DOXYGEN=0
       
     - name: build
       run: cmake --build build --config $BUILD_TYPE -j4

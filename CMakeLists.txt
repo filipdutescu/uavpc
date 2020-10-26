@@ -96,6 +96,21 @@ verbose_message("Applied compiler warnings. Using standard ${CXX_STANDARD}.\n")
 include(cmake/Doxygen.cmake)
 
 #
+# Model project dependencies 
+#
+
+# Identify and link with the specific "packages" the project uses
+find_package(OpenCV REQUIRED)
+
+target_link_libraries(
+  ${PROJECT_NAME}
+  PUBLIC
+    ${OpenCV_LIBS}
+)
+
+verbose_message("Successfully added all dependencies and linked against them.")
+
+#
 # Set the build/user include directories
 #
 
@@ -111,6 +126,7 @@ else()
   target_include_directories(
     ${PROJECT_NAME}
     PUBLIC 
+      ${OpenCV_INCLUDE_DIRS}
       $<INSTALL_INTERFACE:include>    
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
@@ -118,8 +134,9 @@ else()
   )
 	if(${PROJECT_NAME}_BUILD_EXECUTABLE)
 		target_include_directories(
-			${PROJECT_NAME}_LIB
+      ${PROJECT_NAME}_LIB
 			PUBLIC 
+        ${OpenCV_INCLUDE_DIRS}
 				$<INSTALL_INTERFACE:include>    
 				$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 			PRIVATE
@@ -129,24 +146,6 @@ else()
 endif()
 
 message(STATUS "Finished setting up include directories.")
-
-#
-# Model project dependencies 
-#
-
-# Identify and link with the specific "packages" the project uses
-#find_package(package_name package_version REQUIRED package_type [other_options])
-#target_link_libraries(
-#  ${PROJECT_NAME}
-#  PUBLIC
-#    dependency1 ...
-#  PRIVATE
-#    dependency2 ...
-#    ${PROJECT_NAME}_PROJECT_OPTIONS        
-#    ${PROJECT_NAME}_PROJECT_WARNINGS        
-#)
-
-verbose_message("Successfully added all dependencies and linked against them.")
 
 #
 # Provide alias to library for 
