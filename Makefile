@@ -57,3 +57,8 @@ install: ## install the package to the `INSTALL_LOCATION`
 	cmake --build build --config Release
 	cmake --build build --target install --config Release
 
+build-release: ## build the package
+	rm -rf build/
+	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION)
+	cmake --build build --config Release
+
