@@ -1,17 +1,18 @@
 #include "uavpc/Drone/DjiTelloController.hpp"
 
-#include <iostream>
-#include <opencv2/videoio.hpp>
-#include <sstream>
-
 #include "uavpc/Utils/UdpClient.hpp"
+
+#include <iostream>
+#include <sstream>
 
 namespace uavpc
 {
   namespace Drone
   {
     DjiTelloController::DjiTelloController(bool connectOnInit)
-        : m_CommandSocket(-1), m_StateSocket(-1), m_VideoStreamSocket(-1)
+        : m_CommandSocket(UAVPC_SOCKET_DEFAULT),
+          m_StateSocket(UAVPC_SOCKET_DEFAULT),
+          m_VideoStreamSocket(UAVPC_SOCKET_DEFAULT)
     {
       if (connectOnInit)
       {
@@ -21,21 +22,21 @@ namespace uavpc
 
     DjiTelloController::~DjiTelloController()
     {
-      if (m_CommandSocket > -1)
+      if (m_CommandSocket > UAVPC_SOCKET_DEFAULT)
       {
         SendCommand("streamoff");
       }
-      if (m_VideoStreamSocket > -1)
+      if (m_VideoStreamSocket > UAVPC_SOCKET_DEFAULT)
       {
         Utils::UdpClient::CloseSocket(m_VideoStreamSocket);
       }
 
-      if (m_StateSocket > -1)
+      if (m_StateSocket > UAVPC_SOCKET_DEFAULT)
       {
         Utils::UdpClient::CloseSocket(m_StateSocket);
       }
 
-      if (m_CommandSocket > -1)
+      if (m_CommandSocket > UAVPC_SOCKET_DEFAULT)
       {
         Utils::UdpClient::CloseSocket(m_CommandSocket);
       }
@@ -45,7 +46,8 @@ namespace uavpc
     {
       std::cout << "[Command] Sending \"" << command << "\"...\n";
       Utils::UdpClient::SendPacket(m_CommandSocket, command);
-      std::cout << "[Command] Drone responded: \"" << Utils::UdpClient::ReceivePacket(m_CommandSocket, 2048U) << "\".\n";
+      std::cout << "[Command] Drone responded: \"" << Utils::UdpClient::ReceivePacket(m_CommandSocket, s_DefaultPacketSize)
+                << "\".\n";
     }
 
     cv::VideoCapture DjiTelloController::GetVideoStream()
@@ -96,11 +98,12 @@ namespace uavpc
         std::cout << "[Drone] Starting SDK mode...\n";
         std::cout << "[Command] Sending \"command\"...\n";
         Utils::UdpClient::SendPacket(m_CommandSocket, "command");
-        std::cout << "[Command] Drone responded: \"" << Utils::UdpClient::ReceivePacket(m_CommandSocket, 2048U) << "\".\n";
+        std::cout << "[Command] Drone responded: \"" << Utils::UdpClient::ReceivePacket(m_CommandSocket, s_DefaultPacketSize)
+                  << "\".\n";
       }
       catch (std::exception &)
       {
-        m_CommandSocket = -1;
+        m_CommandSocket = UAVPC_SOCKET_DEFAULT;
       }
 
       try
@@ -109,7 +112,7 @@ namespace uavpc
       }
       catch (std::exception &)
       {
-        m_StateSocket = -1;
+        m_StateSocket = UAVPC_SOCKET_DEFAULT;
       }
 
       try
@@ -118,7 +121,7 @@ namespace uavpc
       }
       catch (std::exception &)
       {
-        m_VideoStreamSocket = -1;
+        m_VideoStreamSocket = UAVPC_SOCKET_DEFAULT;
       }
     }
   }  // namespace Drone

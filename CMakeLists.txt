@@ -79,6 +79,7 @@ message(STATUS "Added all header and implementation files.\n")
 # Set the project standard and warnings
 #
 
+set(CMAKE_CXX_STANDARD 17)
 if(${PROJECT_NAME}_BUILD_HEADERS_ONLY)
   target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 else()
@@ -126,22 +127,32 @@ else()
   target_include_directories(
     ${PROJECT_NAME}
     PUBLIC 
-      ${OpenCV_INCLUDE_DIRS}
       $<INSTALL_INTERFACE:include>    
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src
   )
+  target_include_directories(
+    ${PROJECT_NAME}
+    SYSTEM
+    PUBLIC 
+      ${OpenCV_INCLUDE_DIRS}
+  )
 	if(${PROJECT_NAME}_BUILD_EXECUTABLE)
 		target_include_directories(
       ${PROJECT_NAME}_LIB
 			PUBLIC 
-        ${OpenCV_INCLUDE_DIRS}
 				$<INSTALL_INTERFACE:include>    
 				$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 			PRIVATE
 				${CMAKE_CURRENT_SOURCE_DIR}/src
 		)
+    target_include_directories(
+      ${PROJECT_NAME}_LIB
+      SYSTEM
+      PUBLIC 
+        ${OpenCV_INCLUDE_DIRS}
+    )
 	endif()
 endif()
 

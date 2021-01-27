@@ -1,9 +1,10 @@
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
-#include <string>
-
 #include "uavpc/Drone/DjiTelloController.hpp"
 #include "uavpc/Drone/DjiTelloControllerFactory.hpp"
+
+#include <string>
+
+#include <catch2/catch.hpp>
 
 std::string CommandUrl("192.168.10.1");
 std::size_t CommandPort = 8889U;

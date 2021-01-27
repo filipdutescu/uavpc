@@ -1,14 +1,15 @@
 #ifndef UAVPC_DRONE_DJI_TELLO_CONTROLLER_HPP_
 #define UAVPC_DRONE_DJI_TELLO_CONTROLLER_HPP_
 
-#include <string>
-
 #include "uavpc/Drone/IController.hpp"
 #include "uavpc/Utils/CompatibilityMacros.hpp"
 
-UAVPC_OPENCV_DISABLE_WARNINGS
+#include <string>
+#ifdef _WIN32
+#include <winsock2.h>
+#endif
+
 #include <opencv2/videoio.hpp>
-UAVPC_END_OPENCV_DISABLE_WARNINGS
 
 namespace uavpc
 {
@@ -24,17 +25,19 @@ namespace uavpc
      */
     class DjiTelloController : public IController
     {
+      static constexpr std::size_t s_DefaultPacketSize = 2048U;
+
       std::string m_CommandUrl          = "192.168.10.1";
       const std::uint16_t m_CommandPort = 8889U;
-      int m_CommandSocket;
+      UAVPC_SOCKET_TYPE m_CommandSocket;
 
       std::string m_StateUrl          = "0.0.0.0";
       const std::uint16_t m_StatePort = 8890U;
-      int m_StateSocket;
+      UAVPC_SOCKET_TYPE m_StateSocket;
 
       std::string m_VideoStreamUrl          = "0.0.0.0";
       const std::uint16_t m_VideoStreamPort = 11111U;
-      int m_VideoStreamSocket;
+      UAVPC_SOCKET_TYPE m_VideoStreamSocket;
 
      public:
       /** @brief Instantiate a new DJI Tello controller.
