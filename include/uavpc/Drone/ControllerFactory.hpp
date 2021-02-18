@@ -1,10 +1,10 @@
 #ifndef UAVPC_DRONE_CONTROLLER_FACTORY_HPP_
 #define UAVPC_DRONE_CONTROLLER_FACTORY_HPP_
 
-#include <memory>
-
 #include "uavpc/Drone/ControllerType.hpp"
 #include "uavpc/Drone/IController.hpp"
+
+#include <memory>
 
 namespace uavpc
 {

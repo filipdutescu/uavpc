@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
-
 #include "uavpc/Drone/DjiTelloControllerFactory.hpp"
+
+#include <catch2/catch.hpp>
 
 TEST_CASE("Default constructor should init `m_ConnectOnInit` to  true.", "[single-file]")
 {

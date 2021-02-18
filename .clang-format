@@ -9,6 +9,15 @@ AllowShortLoopsOnASingleLine: 'false'
 BreakBeforeBraces: Allman
 Cpp11BracedListStyle: 'false'
 ColumnLimit: 125 
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:           '^<(opencv2|catch2)\/.'
+    Priority:        3
+  - Regex:           '<[[:alnum:].]+>'
+    Priority:        2
+  - Regex:           '.*'
+    Priority:        1
+    SortPriority:    0
 NamespaceIndentation: All
 SpaceAfterTemplateKeyword: 'false'
 SpaceBeforeCtorInitializerColon: 'true'

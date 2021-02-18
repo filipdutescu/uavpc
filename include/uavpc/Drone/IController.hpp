@@ -3,11 +3,7 @@
 
 #include <string>
 
-#include "uavpc/Utils/CompatibilityMacros.hpp"
-
-UAVPC_OPENCV_DISABLE_WARNINGS
 #include <opencv2/videoio.hpp>
-UAVPC_END_OPENCV_DISABLE_WARNINGS
 
 namespace uavpc
 {
