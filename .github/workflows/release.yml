@@ -8,6 +8,7 @@ on:
 env:
   PROJECT_NAME: "uavpc"
   BUILD_TYPE: Release
+  BIN_FILES_PATH: build/bin/Release
 
 jobs:
   build:
@@ -92,14 +93,14 @@ jobs:
     - name: generate archive (Windows)
       if: ${{ runner.os == 'Windows' }}
       run: |
-        rmdir -r -fo build
+        cd $env:BIN_FILES_PATH
         7z a -tzip $HOME/artifact.zip *
 
 
     - name: generate archive
       if: ${{ runner.os != 'Windows' }}
       run: |
-        rm -rf build
+        cd $BIN_FILES_PATH
         tar -cvzf $HOME/artifact.tar.gz .
 
     - name: upload artifacts

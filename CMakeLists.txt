@@ -16,6 +16,9 @@ project(
 
 include(cmake/StandardSettings.cmake)
 include(cmake/Utils.cmake)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Debug")
+endif()
 message(STATUS "Started CMake for ${PROJECT_NAME} v${PROJECT_VERSION}...\n")
 
 #
@@ -64,6 +67,13 @@ else()
     ${sources}
   )
 endif()
+
+set_target_properties(${PROJECT_NAME}
+  PROPERTIES
+  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}"
+)
 
 verbose_message("Found the following header files:")
 verbose_message(${headers})
