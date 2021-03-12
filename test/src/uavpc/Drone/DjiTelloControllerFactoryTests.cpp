@@ -23,7 +23,7 @@ TEST_CASE("Constructor sets proper value to `m_ConnectOnInit`.", "[single-file]"
 
 TEST_CASE("GetController should return a non-null pointer to an IController.", "[single-file]")
 {
-  auto factory                              = uavpc::Drone::DjiTelloControllerFactory(false);
+  auto factory = uavpc::Drone::DjiTelloControllerFactory(false);
   uavpc::Drone::IController* controllerMock = nullptr;
 
   auto* result = factory.GetController().get();
@@ -34,7 +34,7 @@ TEST_CASE("GetController should return a non-null pointer to an IController.", "
 
 TEST_CASE("SetConnectOnInit sets the proper value to `m_ConnectOnInit`.", "[single-file]")
 {
-  auto factoryConnect   = uavpc::Drone::DjiTelloControllerFactory();
+  auto factoryConnect = uavpc::Drone::DjiTelloControllerFactory();
   auto factoryNoConnect = uavpc::Drone::DjiTelloControllerFactory(false);
 
   factoryConnect.SetConnectOnInit(false);

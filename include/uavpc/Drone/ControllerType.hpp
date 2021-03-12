@@ -1,18 +1,15 @@
 #ifndef UAVPC_DRONE_CONTROLLER_TYPE_HPP_
 #define UAVPC_DRONE_CONTROLLER_TYPE_HPP_
 
-namespace uavpc
+namespace uavpc::Drone
 {
-  namespace Drone
+  /** @enum ControllerType
+   *  @brief Enum containing the supported controllers.
+   */
+  enum ControllerType
   {
-    /** @enum ControllerType
-     *  @brief Enum containing the supported controllers.
-     */
-    enum ControllerType
-    {
-      DJI_TELLO
-    };
-  }  // namespace Drone
-}  // namespace uavpc
+    DJI_TELLO
+  };
+}  // namespace uavpc::Drone
 
 #endif

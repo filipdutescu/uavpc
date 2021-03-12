@@ -1,26 +1,23 @@
 #include "uavpc/Drone/DjiTelloControllerFactory.hpp"
 
-namespace uavpc
+namespace uavpc::Drone
 {
-  namespace Drone
+  std::shared_ptr<IController> DjiTelloControllerFactory::createController()
   {
-    std::shared_ptr<IController> DjiTelloControllerFactory::createController()
-    {
-      return std::make_shared<DjiTelloController>(m_ConnectOnInit);
-    }
+    return std::make_shared<DjiTelloController>(m_ConnectOnInit);
+  }
 
-    DjiTelloControllerFactory::DjiTelloControllerFactory(bool connectOnInit) : m_ConnectOnInit(connectOnInit)
-    {
-    }
+  DjiTelloControllerFactory::DjiTelloControllerFactory(bool connectOnInit) : m_ConnectOnInit(connectOnInit)
+  {
+  }
 
-    bool DjiTelloControllerFactory::ConnectOnInit() const noexcept
-    {
-      return m_ConnectOnInit;
-    }
+  bool DjiTelloControllerFactory::ConnectOnInit() const noexcept
+  {
+    return m_ConnectOnInit;
+  }
 
-    void DjiTelloControllerFactory::SetConnectOnInit(bool connectOnInit)
-    {
-      m_ConnectOnInit = connectOnInit;
-    }
-  }  // namespace Drone
-}  // namespace uavpc
+  void DjiTelloControllerFactory::SetConnectOnInit(bool connectOnInit)
+  {
+    m_ConnectOnInit = connectOnInit;
+  }
+}  // namespace uavpc::Drone

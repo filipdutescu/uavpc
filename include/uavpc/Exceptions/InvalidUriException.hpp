@@ -3,19 +3,16 @@
 
 #include <stdexcept>
 
-namespace uavpc
+namespace uavpc::Exceptions
 {
-  namespace Exceptions
+  /** @class InvalidUriException
+   *  @brief Used to signal the usage of an invalid URI.
+   */
+  class InvalidUriException : public std::runtime_error
   {
-    /** @class InvalidUriException
-     *  @brief Used to signal the usage of an invalid URI.
-     */
-    class InvalidUriException : public std::runtime_error
-    {
-    public:
-      InvalidUriException();
-    };
-  }
-}
+   public:
+    InvalidUriException();
+  };
+}  // namespace uavpc::Exceptions
 
 #endif

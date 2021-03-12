@@ -1,11 +1,8 @@
 #include "uavpc/Exceptions/InvalidUriException.hpp"
 
-namespace uavpc
+namespace uavpc::Exceptions
 {
-  namespace Exceptions
+  InvalidUriException::InvalidUriException() : std::runtime_error("Invalid URI.")
   {
-    InvalidUriException::InvalidUriException() : std::runtime_error("Invalid URI.")
-    {
-    }
-  }  // namespace Exceptions
-}  // namespace uavpc
+  }
+}  // namespace uavpc::Exceptions
