@@ -1,12 +1,9 @@
 #include "uavpc/Drone/ControllerFactory.hpp"
 
-namespace uavpc
+namespace uavpc::Drone
 {
-  namespace Drone
+  std::shared_ptr<IController> ControllerFactory::GetController()
   {
-    std::shared_ptr<IController> ControllerFactory::GetController()
-    {
-      return createController();
-    }
-  }  // namespace Drone
-}  // namespace uavpc
+    return createController();
+  }
+}  // namespace uavpc::Drone

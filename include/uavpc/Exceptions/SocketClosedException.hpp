@@ -3,22 +3,19 @@
 
 #include <stdexcept>
 
-namespace uavpc
+namespace uavpc::Exceptions
 {
-  namespace Exceptions
+  /** @class SocketClosedException
+   *  @extends std::runtime_error
+   *  @brief Used to signal socket operation failure due to a closed socket.
+   *
+   * The SocketClosedException is used to signal that an operation on a socket has failed, do to the later not being open.
+   */
+  class SocketClosedException : public std::runtime_error
   {
-    /** @class SocketClosedException
-     *  @extends std::runtime_error
-     *  @brief Used to signal socket operation failure due to a closed socket.
-     *
-     * The SocketClosedException is used to signal that an operation on a socket has failed, do to the later not being open.
-     */
-    class SocketClosedException : public std::runtime_error
-    {
-     public:
-      SocketClosedException();
-    };
-  }  // namespace Exceptions
-}  // namespace uavpc
+   public:
+    SocketClosedException();
+  };
+}  // namespace uavpc::Exceptions
 
 #endif

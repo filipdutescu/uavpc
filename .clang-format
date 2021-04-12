@@ -1,7 +1,9 @@
 ---
 BasedOnStyle: Google
+AllowAllArgumentsOnNextLine: 'true'
+AllowAllConstructorInitializersOnNextLine: 'true'
+AllowAllParametersOfDeclarationOnNextLine: 'true'
 AlignConsecutiveMacros: 'true'
-AlignConsecutiveAssignments: 'true'
 AllowShortCaseLabelsOnASingleLine: 'true'
 AllowShortFunctionsOnASingleLine: 'None'
 AllowShortIfStatementsOnASingleLine: 'Never'
@@ -22,6 +24,7 @@ NamespaceIndentation: All
 SpaceAfterTemplateKeyword: 'false'
 SpaceBeforeCtorInitializerColon: 'true'
 SpaceBeforeInheritanceColon: 'true'
+SpaceBeforeParens: ControlStatements
 SpaceBeforeRangeBasedForLoopColon: 'true'
 SpaceInEmptyBlock: true
 Standard: 'Latest'

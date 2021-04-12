@@ -1,11 +1,8 @@
 #include "uavpc/Exceptions/SocketCreationException.hpp"
 
-namespace uavpc
+namespace uavpc::Exceptions
 {
-  namespace Exceptions
+  SocketCreationException::SocketCreationException() : std::runtime_error("Socket creation failed.")
   {
-    SocketCreationException::SocketCreationException() : std::runtime_error("Socket creation failed.")
-    {
-    }
-  }  // namespace Exceptions
-}  // namespace uavpc
+  }
+}  // namespace uavpc::Exceptions

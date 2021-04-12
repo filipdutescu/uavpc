@@ -3,20 +3,17 @@
 
 #include <stdexcept>
 
-namespace uavpc
+namespace uavpc::Exceptions
 {
-  namespace Exceptions
+  /** @class SocketConnectionException
+   *  @extends std::runtime_error
+   *  @brief Used to signal an failure to connect to a socket.
+   */
+  class SocketConnectionException : public std::runtime_error
   {
-    /** @class SocketConnectionException
-     *  @extends std::runtime_error
-     *  @brief Used to signal an failure to connect to a socket.
-     */
-    class SocketConnectionException : public std::runtime_error
-    {
-     public:
-      SocketConnectionException();
-    };
-  }  // namespace Exceptions
-}  // namespace uavpc
+   public:
+    SocketConnectionException();
+  };
+}  // namespace uavpc::Exceptions
 
 #endif

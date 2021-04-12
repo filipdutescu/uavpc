@@ -1,11 +1,8 @@
 #include "uavpc/Exceptions/SocketConnectionException.hpp"
 
-namespace uavpc
+namespace uavpc::Exceptions
 {
-  namespace Exceptions
+  SocketConnectionException::SocketConnectionException() : std::runtime_error("Could not connect to socket.")
   {
-    SocketConnectionException::SocketConnectionException() : std::runtime_error("Could not connect to socket.")
-    {
-    }
-  }  // namespace Exceptions
-}  // namespace uavpc
+  }
+}  // namespace uavpc::Exceptions

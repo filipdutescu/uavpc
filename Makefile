@@ -62,3 +62,7 @@ build-release: ## build the package
 	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION)
 	cmake --build build --config Release
 
+format-sources: ## format the project sources
+	rm -rf build/
+	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION)
+	cmake --build build --target clang-format

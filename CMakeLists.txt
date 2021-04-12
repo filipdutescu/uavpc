@@ -94,11 +94,14 @@ if(${PROJECT_NAME}_BUILD_HEADERS_ONLY)
   target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 else()
   target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+  if(${PROJECT_NAME}_BUILD_EXECUTABLE)
+    target_compile_features(${PROJECT_NAME}_LIB PUBLIC cxx_std_17)
+  endif()
 endif()
 include(cmake/CompilerWarnings.cmake)
 set_project_warnings(${PROJECT_NAME})
 
-verbose_message("Applied compiler warnings. Using standard ${CXX_STANDARD}.\n")
+verbose_message("Applied compiler warnings. Using standard ${CMAKE_CXX_STANDARD}.\n")
 
 #
 # Enable Doxygen
@@ -117,7 +120,16 @@ target_link_libraries(
   ${PROJECT_NAME}
   PUBLIC
     ${OpenCV_LIBS}
+    i2c
 )
+if(${PROJECT_NAME}_BUILD_EXECUTABLE)
+  target_link_libraries(
+    ${PROJECT_NAME}_LIB
+    PUBLIC
+      ${OpenCV_LIBS}
+      i2c
+  )
+endif()
 
 verbose_message("Successfully added all dependencies and linked against them.")
 
