@@ -31,14 +31,14 @@ for how to format your code.
 
 #### Closing Issues
 
-Put `closes #XXXX` in your comment to auto-close the issue that your PR fixes
-(if such).
+Put `closes GH-XXXX` (preferred) or `closes #XXXX` in your comment to auto-close
+the issue that your PR fixes (if such).
 
 ---
 
 ## End delete before submitting
 
-Fixes #XXXX
+Closes GH-XXXX
 
 ## Proposed changes
 
