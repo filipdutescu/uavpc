@@ -29,7 +29,7 @@ namespace uavpc::Drone
     /** @brief Check if the controller should connect on initialization.
      *  @returns A boolean representing whether or not the controller should connect on initialization.
      */
-    bool ConnectOnInit() const noexcept;
+    [[nodiscard]] bool ConnectOnInit() const noexcept;
 
     /** @brief Set whether or not the controller should connect on initialization.
      *  @param[in] connectOnInit A boolean representing whether or not the controller should connect on initialization.

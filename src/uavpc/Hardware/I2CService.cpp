@@ -48,4 +48,10 @@ namespace uavpc::Hardware
   {
     i2c_smbus_write_byte_data(m_DeviceFile, registerAddress, value);
   }
+
+  std::int32_t I2CService::ReadWordData(std::uint8_t registerAddress) const noexcept
+  {
+    auto rawData = i2c_smbus_read_word_data(m_DeviceFile, registerAddress);
+    return (rawData << 8) | (rawData >> 8);
+  }
 }  // namespace uavpc::Hardware

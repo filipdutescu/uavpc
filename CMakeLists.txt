@@ -57,7 +57,10 @@ include(cmake/SourcesAndHeaders.cmake)
 
 if(${PROJECT_NAME}_BUILD_EXECUTABLE)
   add_executable(${PROJECT_NAME} ${exe_sources})
-  add_library(${PROJECT_NAME}_LIB ${headers} ${sources})
+
+  if(${PROJECT_NAME}_ENABLE_UNIT_TESTING)
+    add_library(${PROJECT_NAME}_LIB ${headers} ${sources})
+  endif()
 elseif(${PROJECT_NAME}_BUILD_HEADERS_ONLY)
   add_library(${PROJECT_NAME} INTERFACE)
 else()
@@ -94,7 +97,8 @@ if(${PROJECT_NAME}_BUILD_HEADERS_ONLY)
   target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 else()
   target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
-  if(${PROJECT_NAME}_BUILD_EXECUTABLE)
+
+  if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
     target_compile_features(${PROJECT_NAME}_LIB PUBLIC cxx_std_17)
   endif()
 endif()
@@ -115,18 +119,21 @@ include(cmake/Doxygen.cmake)
 
 # Identify and link with the specific "packages" the project uses
 find_package(OpenCV REQUIRED)
+find_package(Threads REQUIRED)
 
 target_link_libraries(
   ${PROJECT_NAME}
   PUBLIC
     ${OpenCV_LIBS}
+    ${CMAKE_THREAD_LIBS_INIT}
     i2c
 )
-if(${PROJECT_NAME}_BUILD_EXECUTABLE)
+if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
   target_link_libraries(
     ${PROJECT_NAME}_LIB
     PUBLIC
       ${OpenCV_LIBS}
+      ${CMAKE_THREAD_LIBS_INIT}
       i2c
   )
 endif()
@@ -160,7 +167,8 @@ else()
     PUBLIC 
       ${OpenCV_INCLUDE_DIRS}
   )
-	if(${PROJECT_NAME}_BUILD_EXECUTABLE)
+
+  if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
 		target_include_directories(
       ${PROJECT_NAME}_LIB
 			PUBLIC 

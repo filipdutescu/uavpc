@@ -25,7 +25,7 @@ namespace uavpc::Hardware
      *  @param[in] accelerometerRange The value of the accelerometer range (ie: G2, G4, G8 etc.).
      *  @param[in] gyroscopeRange The value of the gyroscope range (ie: DEGS250, DEGS500, DEGS1000 etc.).
      */
-    Mpu6050Options(HWAccelerometerRange::Value accelerometerRange, HWGyroscopeRange::Value gyroscopeRange)
+    constexpr explicit Mpu6050Options(HWAccelerometerRange::Value accelerometerRange, HWGyroscopeRange::Value gyroscopeRange)
         : AccelerometerRange(accelerometerRange), GyroscopeRange(gyroscopeRange)
     {
     }
@@ -39,8 +39,11 @@ namespace uavpc::Hardware
     SensorData GyroscopeOffset = SensorData();
 
     std::uint8_t PowerRegister = Defaults::PowerRegister;
+    std::uint8_t PowerRegisterValue = Defaults::PowerRegisterValue;
     std::uint8_t DlpfRegister = Defaults::DlpfRegister;
+    std::uint8_t DlpfRegisterValue = Defaults::DlpfRegisterValue;
     std::uint8_t SampleRateRegister = Defaults::SampleRateRegister;
+    std::uint8_t SampleRateRegisterValue = Defaults::SampleRateRegisterValue;
 
     std::uint8_t AccelConfigRegister = Defaults::AccelConfigRegister;
     std::uint8_t AccelXRegisterHigh = Defaults::AccelXRegisterHigh;
@@ -63,8 +66,11 @@ namespace uavpc::Hardware
       static constexpr std::size_t NoCalibrationIterations = 1000U;
 
       static constexpr std::uint8_t PowerRegister = 0x6b;
+      static constexpr std::uint8_t PowerRegisterValue = 0b00000000;
       static constexpr std::uint8_t DlpfRegister = 0x1a;
+      static constexpr std::uint8_t DlpfRegisterValue = 0b00000100;
       static constexpr std::uint8_t SampleRateRegister = 0x19;
+      static constexpr std::uint8_t SampleRateRegisterValue = 0b00001001;
 
       static constexpr std::uint8_t AccelConfigRegister = 0x1c;
       static constexpr std::uint8_t AccelXRegisterHigh = 0x3b;

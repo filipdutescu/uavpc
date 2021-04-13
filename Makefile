@@ -59,7 +59,7 @@ install: ## install the package to the `INSTALL_LOCATION`
 
 build-release: ## build the package
 	rm -rf build/
-	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION)
+	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION) -Duavpc_ENABLE_DOXYGEN=0 -Duavpc_ENABLE_UNIT_TESTING=0
 	cmake --build build --config Release
 
 format-sources: ## format the project sources

@@ -3,8 +3,11 @@
 #include "uavpc/Hardware/AccelerometerRange.hpp"
 #include "uavpc/Hardware/I2CService.hpp"
 #include "uavpc/Hardware/Mpu6050.hpp"
+#include "uavpc/Trackers/Gesture.hpp"
+#include "uavpc/Trackers/GestureService.hpp"
+#include "uavpc/Trackers/HandTracker.hpp"
+#include "uavpc/Trackers/IGestureService.hpp"
 #include "uavpc/Utils/UdpClient.hpp"
-#include <bits/c++config.h>
 
 #include <chrono>
 #include <cstdlib>
@@ -58,10 +61,8 @@ void showStream()
   }
 }
 
-int main()
+void mpu6050Testing()
 {
-  // showStream();
-
   namespace HW = uavpc::Hardware;
   using namespace std::chrono_literals;
   constexpr std::uint8_t busAddress = 0x68;
@@ -98,6 +99,81 @@ int main()
     prevOutputSize = output.length();
 
     std::this_thread::sleep_for(waitTime);
+  }
+}
+
+int main()
+{
+  // showStream();
+
+  // mpu6050Testing();
+
+  namespace HW = uavpc::Hardware;
+  namespace TK = uavpc::Trackers;
+  using namespace std::chrono_literals;
+  constexpr std::uint8_t busAddress = 0x68;
+
+  std::unique_ptr<HW::II2CService> i2cService = std::make_unique<HW::I2CService>('1', busAddress);
+  std::this_thread::sleep_for(1s);
+  auto options = HW::Mpu6050Options(HW::AccelerometerRange::G8, HW::GyroscopeRange::DEGS1000);
+  auto mpu6050 = HW::Mpu6050(std::move(i2cService), options);
+  std::shared_ptr<const TK::IGestureService> gestureService = std::make_shared<TK::GestureService>();
+  auto handTracker = TK::HandTracker(std::move(mpu6050), gestureService);
+
+  //constexpr auto waitTime = 0.5s;
+  while (true)
+  {
+    auto gesture = handTracker.GetGesture();
+    //auto distances = handTracker.GetDistances();
+
+    std::stringstream ss("Current gesture(s):");
+    if ((gesture & TK::Gesture::LEFT) != 0)
+    {
+      ss << " left;";
+    }
+    if ((gesture & TK::Gesture::RIGHT) != 0)
+    {
+      ss << " right;";
+    }
+    if ((gesture & TK::Gesture::FORWARD) != 0)
+    {
+      ss << " forward;";
+    }
+    if ((gesture & TK::Gesture::BACKWARD) != 0)
+    {
+      ss << " backward;";
+    }
+    if ((gesture & TK::Gesture::UP) != 0)
+    {
+      ss << " up;";
+    }
+    if ((gesture & TK::Gesture::DOWN) != 0)
+    {
+      ss << " down;";
+    }
+    if ((gesture & TK::Gesture::TILT_LEFT) != 0)
+    {
+      ss << " tilt left;";
+    }
+    if ((gesture & TK::Gesture::TILT_RIGHT) != 0)
+    {
+      ss << " tilt right;";
+    }
+    if ((gesture & TK::Gesture::TILT_UP) != 0)
+    {
+      ss << " tilt up;";
+    }
+    if ((gesture & TK::Gesture::TILT_DOWN) != 0)
+    {
+      ss << " tilt down;";
+    }
+
+    if ((gesture | TK::Gesture::NONE) != 0)
+    {
+      //std::cout << ss.str() << std::endl;
+    }
+    //std::cout << distances << std::endl;
+    //std::this_thread::sleep_for(waitTime);
   }
 
   return 0;

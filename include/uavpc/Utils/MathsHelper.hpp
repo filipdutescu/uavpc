@@ -41,7 +41,7 @@ namespace uavpc::Utils
      *  @param[in] sensorData The sensor data to be converted to angles.
      *  @returns A new SensorData instance containing the angles of the one received.
      */
-    [[nodiscard]] static Hardware::SensorData ConvertToAngles(Hardware::SensorData sensorData) noexcept;
+    [[nodiscard]] static Hardware::SensorData ConvertToAngles(const Hardware::SensorData& sensorData) noexcept;
   };
 }  // namespace uavpc::Utils
 

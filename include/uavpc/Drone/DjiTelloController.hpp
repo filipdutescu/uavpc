@@ -14,7 +14,7 @@
 namespace uavpc::Drone
 {
   /** @class DjiTelloController
-   *  @implements IController
+   *  @implements uavpc::Drone::IController
    *  @brief A controller for the DJI Tello drone.
    *
    * It uses the DJI Tello SDK to command the drone, allowing for the full range of commands provided by it. For available
@@ -57,13 +57,13 @@ namespace uavpc::Drone
      */
     ~DjiTelloController() override;
 
-    /** @copydoc Controller::SendCommand()
+    /** @copydoc uavpc::Drone::Controller::SendCommand()
      */
     void SendCommand(const std::string& command) override;
 
-    /** @copydoc Controller::GetVideoStream()
+    /** @copydoc uavpc::Drone::Controller::GetVideoStream()
      */
-    cv::VideoCapture GetVideoStream() override;
+    [[nodiscard]] cv::VideoCapture GetVideoStream() override;
 
     /** @brief Returns the URL used to send commands to the drone.
      *  @returns a std::string containing the URL.

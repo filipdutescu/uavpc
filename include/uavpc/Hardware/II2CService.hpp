@@ -29,6 +29,15 @@ namespace uavpc::Hardware
      *  @param[in] value The 8-bit binary value to be writen in the register.
      */
     virtual void WriteByteData(std::uint8_t registerAddress, std::uint8_t value) const noexcept = 0;
+
+    /** @brief Read 16 bits from a given register address.
+     *  @param[in] registerAddress The hexadecimal address of the register to be read.
+     *  @returns an std::int32_t containing the binary 16-bit value at the register.
+     *
+     * Read 16 bits from a given register address. If there are only 8 available at the address, read the
+     * remaining 8 bits from the next register, by incrementing the address received as a parameter.
+     */
+    [[nodiscard]] virtual std::int32_t ReadWordData(std::uint8_t registerAddress) const noexcept = 0;
   };
 }  // namespace uavpc::Hardware
 

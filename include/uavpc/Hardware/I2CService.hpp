@@ -8,6 +8,7 @@
 namespace uavpc::Hardware
 {
   /** @class I2CService
+   *  @implements uavpc::Hardware::II2CService
    *  @brief Defines the basic operations needed to communicate via I2C.
    *
    * Handles openning and closing the I2C device file and bus, as well as I/O operations to the connected bus.
@@ -37,13 +38,17 @@ namespace uavpc::Hardware
 
     ~I2CService() override;
 
-    /** @copydoc II2CService::ReadByteData()
+    /** @copydoc uavpc::Hardware::II2CService::ReadByteData()
      */
-    std::int32_t ReadByteData(std::uint8_t registerAddress) const noexcept override;
+    [[nodiscard]] std::int32_t ReadByteData(std::uint8_t registerAddress) const noexcept override;
 
-    /** @copydoc II2CService::WriteByteData()
+    /** @copydoc uavpc::Hardware::II2CService::WriteByteData()
      */
     void WriteByteData(std::uint8_t registerAddress, std::uint8_t value) const noexcept override;
+
+    /** @copydoc uavpc::Hardware::II2CService::ReadWordData()
+     */
+    [[nodiscard]] std::int32_t ReadWordData(std::uint8_t registerAddress) const noexcept override;
   };
 }  // namespace uavpc::Hardware
 

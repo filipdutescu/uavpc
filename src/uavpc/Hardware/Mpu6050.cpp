@@ -11,13 +11,6 @@ namespace uavpc::Hardware
 {
   void logCurrentCalibrationProgress(float currentPercentage, bool clearPrevious = true);
 
-  std::int16_t Mpu6050::readCompleteRegister(std::uint8_t highRegisterAddress,
-                                             std::uint8_t lowRegisterAddress) const noexcept
-  {
-    return static_cast<std::int16_t>(m_I2CService->ReadByteData(highRegisterAddress) << 8U |
-                                     m_I2CService->ReadByteData(lowRegisterAddress));
-  }
-
   std::tuple<SensorData, SensorData> Mpu6050::getInitialOffsets() const noexcept
   {
     SensorData accelData = SensorData();
@@ -59,8 +52,7 @@ namespace uavpc::Hardware
 
     if (clearPrevious)
     {
-      // std::cout << std::string(output.length(), '\b');
-      std::cout << "\033[2k\r";
+      std::cout << "\033[K\r";
     }
     std::cout << output;
   }
@@ -68,7 +60,9 @@ namespace uavpc::Hardware
   Mpu6050::Mpu6050(std::unique_ptr<II2CService>&& I2Cservice, Mpu6050Options options)
       : m_I2CService(std::move(I2Cservice)), m_Options(std::move(options)), m_AccelOffset(), m_GyroOffset()
   {
-    m_I2CService->WriteByteData(m_Options.PowerRegister, 0b00000000);
+    m_I2CService->WriteByteData(m_Options.PowerRegister, m_Options.PowerRegisterValue);
+    m_I2CService->WriteByteData(m_Options.DlpfRegister, m_Options.DlpfRegisterValue);
+    m_I2CService->WriteByteData(m_Options.SampleRateRegister, m_Options.SampleRateRegisterValue);
     m_I2CService->WriteByteData(m_Options.AccelConfigRegister, m_Options.AccelerometerRange.GetConfigRegisterValue());
     m_I2CService->WriteByteData(m_Options.GyroConfigRegister, m_Options.GyroscopeRange.GetConfigRegisterValue());
 
@@ -77,10 +71,9 @@ namespace uavpc::Hardware
     m_GyroOffset = gyroOffset;
 
     std::stringstream ss;
-    ss << "\tInitial offsets:\n";
+    ss << "\n\tInitial offsets:\n";
     ss << "Accelerometer offsets: " << m_AccelOffset.X << '\t' << m_AccelOffset.Y << '\t' << m_AccelOffset.Z << '\n';
     ss << "Gyroscope offsets: " << m_GyroOffset.X << '\t' << m_GyroOffset.Y << '\t' << m_GyroOffset.Z << '\n';
-    ss << "\n";
 
     std::cout << ss.str() << std::endl;
   }
@@ -89,21 +82,21 @@ namespace uavpc::Hardware
   {
     auto data = SensorData();
 
-    data.X = static_cast<float>(readCompleteRegister(m_Options.AccelXRegisterHigh, m_Options.AccelXRegisterLow));
-    data.Y = static_cast<float>(readCompleteRegister(m_Options.AccelYRegisterHigh, m_Options.AccelYRegisterLow));
-    data.Z = static_cast<float>(readCompleteRegister(m_Options.AccelZRegisterHigh, m_Options.AccelZRegisterLow));
+    data.X = static_cast<float>(static_cast<std::int16_t>(m_I2CService->ReadWordData(m_Options.AccelXRegisterHigh)));
+    data.Y = static_cast<float>(static_cast<std::int16_t>(m_I2CService->ReadWordData(m_Options.AccelYRegisterHigh)));
+    data.Z = static_cast<float>(static_cast<std::int16_t>(m_I2CService->ReadWordData(m_Options.AccelZRegisterHigh)));
 
-    return Utils::MathsHelper::Round((data - m_AccelOffset) / static_cast<float>(m_Options.AccelerometerRange));
+    return Utils::MathsHelper::Round(data / static_cast<float>(m_Options.AccelerometerRange) - m_AccelOffset);
   }
 
   SensorData Mpu6050::GetGyroscopeData() const noexcept
   {
     auto data = SensorData();
 
-    data.X = static_cast<float>(readCompleteRegister(m_Options.GyroXRegisterHigh, m_Options.GyroXRegisterLow));
-    data.Y = static_cast<float>(readCompleteRegister(m_Options.GyroYRegisterHigh, m_Options.GyroYRegisterLow));
-    data.Z = static_cast<float>(readCompleteRegister(m_Options.GyroZRegisterHigh, m_Options.GyroZRegisterLow));
+    data.X = static_cast<float>(static_cast<std::int16_t>(m_I2CService->ReadWordData(m_Options.GyroXRegisterHigh)));
+    data.Y = static_cast<float>(static_cast<std::int16_t>(m_I2CService->ReadWordData(m_Options.GyroYRegisterHigh)));
+    data.Z = static_cast<float>(static_cast<std::int16_t>(m_I2CService->ReadWordData(m_Options.GyroZRegisterHigh)));
 
-    return Utils::MathsHelper::Round((data - m_GyroOffset) / static_cast<float>(m_Options.GyroscopeRange));
+    return Utils::MathsHelper::Round(data / static_cast<float>(m_Options.GyroscopeRange) - m_GyroOffset);
   }
 }  // namespace uavpc::Hardware

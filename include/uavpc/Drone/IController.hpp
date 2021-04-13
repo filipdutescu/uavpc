@@ -35,7 +35,7 @@ namespace uavpc::Drone
     /** @brief Get an OpenCV VideoCapture instace to capture the video stream of the drone.
      *  @returns A cv::VideoCapture instance, which is configured to capture the video stream of the drone.
      */
-    virtual cv::VideoCapture GetVideoStream() = 0;
+    [[nodiscard]] virtual cv::VideoCapture GetVideoStream() = 0;
   };
 }  // namespace uavpc::Drone
 
