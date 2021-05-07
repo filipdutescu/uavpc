@@ -3,12 +3,13 @@
 
 #include <cmath>
 #include <cstdint>
+#include <ostream>
 
 namespace uavpc::Hardware
 {
   /** @class SensorData
    *
-   * Holds an sensorscope's X, Y and Z values.
+   * Holds an sensor's X, Y and Z values.
    */
   class SensorData
   {
@@ -81,7 +82,7 @@ namespace uavpc::Hardware
       return sensorData;
     }
 
-    /** @brief Divide the current sensorscope data by a given value.
+    /** @brief Divide the current sensor data by a given value.
      *  @returns The current object.
      */
     constexpr SensorData& operator/=(float value) noexcept
@@ -96,7 +97,7 @@ namespace uavpc::Hardware
       return *this;
     }
 
-    /** @brief Divide the current sensorscope data by a given value.
+    /** @brief Divide the current sensor data by a given value.
      *  @returns The a new SensorData instance containing the division result.
      */
     constexpr SensorData operator/(float value) const noexcept
@@ -112,7 +113,29 @@ namespace uavpc::Hardware
 
       return sensorData;
     }
+
+    /** @brief Multiply the current sensor data by a given value.
+     *  @returns The a new SensorData instance containing the multiplication result.
+     */
+    constexpr SensorData operator*(double value) const noexcept
+    {
+      auto sensorData = SensorData(*this);
+      auto floatValue = static_cast<float>(value);
+
+      sensorData.X *= floatValue;
+      sensorData.Y *= floatValue;
+      sensorData.Z *= floatValue;
+
+      return sensorData;
+    }
   };
+
+  inline std::ostream& operator<<(std::ostream& out, const SensorData& sensorData)
+  {
+    out << "x: " << sensorData.X << ", y: " << sensorData.Y << ", z: " << sensorData.Z;
+
+    return out;
+  }
 }  // namespace uavpc::Hardware
 
 #endif

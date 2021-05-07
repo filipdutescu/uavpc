@@ -10,6 +10,8 @@ set(sources
   src/uavpc/Exceptions/SocketCreationException.cpp
   src/uavpc/Hardware/I2CService.cpp
   src/uavpc/Hardware/Mpu6050.cpp
+  src/uavpc/Trackers/GestureService.cpp
+  src/uavpc/Trackers/HandTracker.cpp
   src/uavpc/Utils/MathsHelper.cpp
   src/uavpc/Utils/UdpClient.cpp
 )
@@ -38,6 +40,10 @@ set(headers
   include/uavpc/Hardware/Mpu6050.hpp
   include/uavpc/Hardware/Mpu6050Options.hpp
   include/uavpc/Hardware/SensorData.hpp
+  include/uavpc/Trackers/Gesture.hpp
+  include/uavpc/Trackers/GestureService.hpp
+  include/uavpc/Trackers/HandTracker.hpp
+  include/uavpc/Trackers/IGestureService.hpp
   include/uavpc/Utils/CompatibilityMacros.hpp
   include/uavpc/Utils/MathsHelper.hpp
   include/uavpc/Utils/UdpClient.hpp

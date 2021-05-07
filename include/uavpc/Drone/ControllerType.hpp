@@ -6,7 +6,7 @@ namespace uavpc::Drone
   /** @enum ControllerType
    *  @brief Enum containing the supported controllers.
    */
-  enum ControllerType
+  enum class ControllerType
   {
     DJI_TELLO
   };

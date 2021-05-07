@@ -19,20 +19,11 @@ namespace uavpc::Hardware
    */
   class Mpu6050
   {
-    const std::unique_ptr<II2CService> m_I2CService;
+    std::unique_ptr<II2CService> m_I2CService;
     const Mpu6050Options m_Options;
 
     SensorData m_AccelOffset;
     SensorData m_GyroOffset;
-
-    /** @brief Reads the value of a 16-bit register, by combining the its higher and upper register values.
-     *  @param[in] highRegisterAddress The address of the higher register (meaning the one containing the 8 most
-     * significant bits).
-     *  @param[in] lowRegisterAddress The address of the lower register (meaning the one containing the 8 lower bits).
-     *  @returns an std::int16_t containing the value of combined register, formed from the two provided.
-     */
-    [[nodiscard]] std::int16_t readCompleteRegister(std::uint8_t highRegisterAddress,
-                                                    std::uint8_t lowRegisterAddress) const noexcept;
 
     /** @brief Retrieves the initial offset of the accelerometer.
      *  @returns An std::tuple containing the accelerometer and gyroscope offsets.
@@ -50,7 +41,7 @@ namespace uavpc::Hardware
     explicit Mpu6050(std::unique_ptr<II2CService>&& I2Cservice, Mpu6050Options options = Mpu6050Options());
 
     Mpu6050(const Mpu6050&) = delete;
-    Mpu6050(Mpu6050&&) = delete;
+    Mpu6050(Mpu6050&&) = default;
     Mpu6050& operator=(const Mpu6050&) = delete;
     Mpu6050& operator=(Mpu6050&&) = delete;
     ~Mpu6050() = default;
