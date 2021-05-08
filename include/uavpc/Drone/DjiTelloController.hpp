@@ -17,9 +17,9 @@ namespace uavpc::Drone
    *  @implements uavpc::Drone::IController
    *  @brief A controller for the DJI Tello drone.
    *
-   * It uses the DJI Tello SDK to command the drone, allowing for the full range of commands provided by it. For available
-   * commands, please see the <a
-   * href="https://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf">official Tello SDK</a>.
+   * It uses the DJI Tello SDK to command the drone, allowing for the full range of commands provided by it. For
+   * available commands, please see the
+   * <a href="https://dl-cdn.ryzerobotics.com/downloads/Tello/Tello%20SDK%202.0%20User%20Guide.pdf">official Tello SDK</a>.
    */
   class DjiTelloController : public IController
   {
@@ -60,6 +60,10 @@ namespace uavpc::Drone
     /** @copydoc uavpc::Drone::Controller::SendCommand()
      */
     void SendCommand(const std::string& command) override;
+
+    /** @copydoc uavpc::Drone::Controller::GetCommands()
+     */
+    std::vector<std::string> GetCommands(const std::uint16_t& gestures) override;
 
     /** @copydoc uavpc::Drone::Controller::GetVideoStream()
      */

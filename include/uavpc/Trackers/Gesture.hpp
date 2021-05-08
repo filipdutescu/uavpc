@@ -23,7 +23,7 @@ namespace uavpc::Trackers
     TILT_RIGHT = 0b1000000000,
   };
 
-  constexpr int operator|(const std::uint16_t uint, const Gesture& gesture)
+  constexpr int operator|(const std::uint16_t& uint, const Gesture& gesture)
   {
     return uint | static_cast<std::uint16_t>(gesture);
   }
@@ -33,7 +33,7 @@ namespace uavpc::Trackers
     uint |= static_cast<std::uint16_t>(gesture);
   }
 
-  constexpr int operator&(std::uint16_t& uint, const Gesture& gesture)
+  constexpr int operator&(const std::uint16_t& uint, const Gesture& gesture)
   {
     return uint & static_cast<std::uint16_t>(gesture);
   }

@@ -27,8 +27,8 @@ namespace uavpc::Hardware
     logCurrentCalibrationProgress(0.0F, false);
     for (std::size_t i = 0U; i < m_Options.NoCalibrationIterations; ++i)
     {
-      logCurrentCalibrationProgress(static_cast<float>(i + 1U) / static_cast<float>(m_Options.NoCalibrationIterations) *
-                                    100.0F);
+      logCurrentCalibrationProgress(
+          static_cast<float>(i + 1U) / static_cast<float>(m_Options.NoCalibrationIterations) * 100.0F);
       auto currentAccelData = GetAccelerometerData();
       auto currentGyroData = GetGyroscopeData();
 
@@ -57,8 +57,11 @@ namespace uavpc::Hardware
     std::cout << output;
   }
 
-  Mpu6050::Mpu6050(std::unique_ptr<II2CService>&& I2Cservice, Mpu6050Options options)
-      : m_I2CService(std::move(I2Cservice)), m_Options(std::move(options)), m_AccelOffset(), m_GyroOffset()
+  Mpu6050::Mpu6050(std::shared_ptr<II2CService> I2Cservice, Mpu6050Options options)
+      : m_I2CService(std::move(I2Cservice)),
+        m_Options(std::move(options)),
+        m_AccelOffset(),
+        m_GyroOffset()
   {
     m_I2CService->WriteByteData(m_Options.PowerRegister, m_Options.PowerRegisterValue);
     m_I2CService->WriteByteData(m_Options.DlpfRegister, m_Options.DlpfRegisterValue);

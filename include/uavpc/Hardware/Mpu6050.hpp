@@ -19,7 +19,7 @@ namespace uavpc::Hardware
    */
   class Mpu6050
   {
-    std::unique_ptr<II2CService> m_I2CService;
+    std::shared_ptr<II2CService> m_I2CService;
     const Mpu6050Options m_Options;
 
     SensorData m_AccelOffset;
@@ -34,13 +34,14 @@ namespace uavpc::Hardware
     /** @brief Instantiate a new controller for an MPU-6050 found at a given address.
      * sensor.
      *  @param[in] II2CService A II2CService implementation to be used to communicate with the device through its bus.
-     *  @param[in] options Optional. A Mpu6050Options instance, containing the configurations and settings for the sensor.
+     *  @param[in] options Optional. A Mpu6050Options instance, containing the configurations and settings for the
+     * sensor.
      *  @throws I2CUnsupportedException
      *  @throws InvalidAddressException
      */
-    explicit Mpu6050(std::unique_ptr<II2CService>&& I2Cservice, Mpu6050Options options = Mpu6050Options());
+    explicit Mpu6050(std::shared_ptr<II2CService> I2Cservice, Mpu6050Options options = Mpu6050Options());
 
-    Mpu6050(const Mpu6050&) = delete;
+    Mpu6050(const Mpu6050&) = default;
     Mpu6050(Mpu6050&&) = default;
     Mpu6050& operator=(const Mpu6050&) = delete;
     Mpu6050& operator=(Mpu6050&&) = delete;

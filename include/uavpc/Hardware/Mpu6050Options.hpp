@@ -26,7 +26,8 @@ namespace uavpc::Hardware
      *  @param[in] gyroscopeRange The value of the gyroscope range (ie: DEGS250, DEGS500, DEGS1000 etc.).
      */
     constexpr explicit Mpu6050Options(HWAccelerometerRange::Value accelerometerRange, HWGyroscopeRange::Value gyroscopeRange)
-        : AccelerometerRange(accelerometerRange), GyroscopeRange(gyroscopeRange)
+        : AccelerometerRange(accelerometerRange),
+          GyroscopeRange(gyroscopeRange)
     {
     }
 

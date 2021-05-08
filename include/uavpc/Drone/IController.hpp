@@ -1,7 +1,9 @@
 #ifndef UAVPC_DRONE_ICONTROLLER_HPP_
 #define UAVPC_DRONE_ICONTROLLER_HPP_
 
+#include <cstdint>
 #include <string>
+#include <vector>
 
 #include <opencv2/videoio.hpp>
 
@@ -31,6 +33,13 @@ namespace uavpc::Drone
      * Send the drone the command receved as a parameter.
      */
     virtual void SendCommand(const std::string& command) = 0;
+
+    /** @brief Convert gestures received to a list of commands.
+     *  @param[in] gestures An std::uint16_t containg the gestures to be converted to commands.
+     *  @returns An std::vector of std::string values, representing the list of commands parsed from the given
+     *  gestures.
+     */
+    virtual std::vector<std::string> GetCommands(const std::uint16_t& gestures) = 0;
 
     /** @brief Get an OpenCV VideoCapture instace to capture the video stream of the drone.
      *  @returns A cv::VideoCapture instance, which is configured to capture the video stream of the drone.

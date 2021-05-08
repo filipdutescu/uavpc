@@ -32,7 +32,7 @@ namespace uavpc::Hardware
     explicit I2CService(unsigned char deviceNo, std::uint8_t busAddress);
 
     I2CService(const I2CService&) = delete;
-    I2CService(I2CService&&) = delete;
+    I2CService(I2CService&&) = default;
     I2CService& operator=(const I2CService&) = delete;
     I2CService& operator=(I2CService&&) = delete;
 
