@@ -24,7 +24,7 @@ jobs:
       id: cache
       with:
         path: ${{ github.workspace }}/${{ env.install_location }}
-        key: ${{ runner.os }}-dependencies
+        key: ${{ runner.os }}-dependencies-v1
 
     - name: install Catch2
       if: steps.cache.outputs.cache-hit != 'true'
@@ -48,6 +48,21 @@ jobs:
           -DBUILD_PERF_TESTS:BOOL=OFF -DBUILD_TESTS:BOOL=OFF -DBUILD_DOCS:BOOL=OFF -DBUILD_EXAMPLES:BOOL=OFF\
           -DBUILD_opencv_apps:BOOL=OFF\
           -DBUILD_FAT_JAVA_LIB:BOOL=OFF -DBUILD_JAVA:BOOL=OFF
+        cmake --build build --config Release -j4
+        cmake --build build --target install --config Release
+
+    - name: install OpenPose
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        cd ..
+        git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose.git --branch v1.7.0
+        cd opencv
+        cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} \
+          -DDOWNLOAD_FACE_MODEL:BOOL=OFF\
+          -DDOWNLOAD_HAND_MODEL:BOOL=OFF\
+          -DBUILD_EXAMPLES:BOOL=OFF\
+          -DBUILD_PYTHON:BOOL=OFF\
+          -DBUILD_SHARED_LIBS:BOOL=OFF
         cmake --build build --config Release -j4
         cmake --build build --target install --config Release
 
