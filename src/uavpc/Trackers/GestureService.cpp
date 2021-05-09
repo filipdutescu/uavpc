@@ -10,7 +10,7 @@ namespace uavpc::Trackers
     setTiltRight(gestures, angles);
   }
 
-  void GestureService::setTiltLeft(std::uint16_t& gestures, const Hardware::SensorData& angles)  noexcept
+  void GestureService::setTiltLeft(std::uint16_t& gestures, const Hardware::SensorData& angles) noexcept
   {
     if (angles.X >= s_TiltLeftRightThreshold)
     {
@@ -75,7 +75,7 @@ namespace uavpc::Trackers
       gestures |= Gesture::LEFT;
     }
   }
-  
+
   void GestureService::setRight(std::uint16_t& gestures, const Hardware::SensorData& distances) noexcept
   {
     if (distances.Y < -s_LeftRightThreshold)
@@ -100,8 +100,8 @@ namespace uavpc::Trackers
     }
   }
 
-  std::uint16_t GestureService::ParseGesturesFrom(const Hardware::SensorData &distances,
-                                                  const Hardware::SensorData &angles) const noexcept
+  std::uint16_t GestureService::ParseGesturesFrom(const Hardware::SensorData& distances, const Hardware::SensorData& angles)
+      const noexcept
   {
     auto gestures = static_cast<std::uint16_t>(Gesture::NONE);
 

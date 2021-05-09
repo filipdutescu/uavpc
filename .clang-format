@@ -1,14 +1,16 @@
 ---
 BasedOnStyle: Google
-AllowAllArgumentsOnNextLine: 'true'
-AllowAllConstructorInitializersOnNextLine: 'true'
-AllowAllParametersOfDeclarationOnNextLine: 'true'
+AlignAfterOpenBracket: 'AlwaysBreak'
+AllowAllConstructorInitializersOnNextLine: 'false'
+AllowAllParametersOfDeclarationOnNextLine: 'false'
 AlignConsecutiveMacros: 'true'
 AllowShortCaseLabelsOnASingleLine: 'true'
 AllowShortFunctionsOnASingleLine: 'None'
 AllowShortIfStatementsOnASingleLine: 'Never'
 AllowShortLoopsOnASingleLine: 'false'
 BreakBeforeBraces: Allman
+BinPackArguments: 'false'
+BinPackParameters: 'false'
 Cpp11BracedListStyle: 'false'
 ColumnLimit: 125 
 IncludeBlocks: Regroup

@@ -1,5 +1,6 @@
 #include "uavpc/Drone/DjiTelloController.hpp"
 
+#include "uavpc/Trackers/Gesture.hpp"
 #include "uavpc/Utils/UdpClient.hpp"
 
 #include <iostream>
@@ -8,7 +9,9 @@
 namespace uavpc::Drone
 {
   DjiTelloController::DjiTelloController(bool connectOnInit)
-      : m_CommandSocket(UAVPC_SOCKET_DEFAULT), m_StateSocket(UAVPC_SOCKET_DEFAULT), m_VideoStreamSocket(UAVPC_SOCKET_DEFAULT)
+      : m_CommandSocket(UAVPC_SOCKET_DEFAULT),
+        m_StateSocket(UAVPC_SOCKET_DEFAULT),
+        m_VideoStreamSocket(UAVPC_SOCKET_DEFAULT)
   {
     if (connectOnInit)
     {
@@ -44,6 +47,54 @@ namespace uavpc::Drone
     Utils::UdpClient::SendPacket(m_CommandSocket, command);
     std::cout << "[Command] Drone responded: \"" << Utils::UdpClient::ReceivePacket(m_CommandSocket, s_DefaultPacketSize)
               << "\".\n";
+  }
+
+  std::vector<std::string> DjiTelloController::GetCommands(const std::uint16_t &gestures)
+  {
+    std::vector<std::string> commands;
+
+    if ((gestures & Trackers::Gesture::LEFT) != 0)
+    {
+      commands.emplace_back("left 20");
+    }
+    if ((gestures & Trackers::Gesture::RIGHT) != 0)
+    {
+      commands.emplace_back("right 20");
+    }
+    if ((gestures & Trackers::Gesture::FORWARD) != 0)
+    {
+      commands.emplace_back("forward 20");
+    }
+    if ((gestures & Trackers::Gesture::BACKWARD) != 0)
+    {
+      commands.emplace_back("backward 20");
+    }
+    if ((gestures & Trackers::Gesture::UP) != 0)
+    {
+      commands.emplace_back("up 20");
+    }
+    if ((gestures & Trackers::Gesture::DOWN) != 0)
+    {
+      commands.emplace_back("down 20");
+    }
+    if ((gestures & Trackers::Gesture::TILT_LEFT) != 0)
+    {
+      commands.emplace_back("ccw 20");
+    }
+    if ((gestures & Trackers::Gesture::TILT_RIGHT) != 0)
+    {
+      commands.emplace_back("cw 20");
+    }
+    // if ((gestures & Trackers::Gesture::TILT_UP) != 0)
+    //{
+    //  commands.emplace_back("takeoff");
+    //}
+    // if ((gestures & Trackers::Gesture::TILT_DOWN) != 0)
+    //{
+    //  commands.emplace_back("land");
+    //}
+
+    return commands;
   }
 
   cv::VideoCapture DjiTelloController::GetVideoStream()

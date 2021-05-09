@@ -1,4 +1,5 @@
 set(sources
+  src/uavpc/Joystick.cpp
   src/uavpc/Drone/ControllerFactory.cpp
   src/uavpc/Drone/DjiTelloController.cpp
   src/uavpc/Drone/DjiTelloControllerFactory.cpp
@@ -22,6 +23,7 @@ set(exe_sources
 )
 
 set(headers
+  include/uavpc/Joystick.hpp
   include/uavpc/Drone/ControllerFactory.hpp
   include/uavpc/Drone/ControllerType.hpp
   include/uavpc/Drone/DjiTelloController.hpp

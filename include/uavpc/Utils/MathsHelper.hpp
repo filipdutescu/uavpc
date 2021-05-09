@@ -22,8 +22,9 @@ namespace uavpc::Utils
      *  @param[in] precision Default: 3. The precision the values should be rounded to.
      *  @returns A new SensorData instance containing the rounded values.
      */
-    [[nodiscard]] static constexpr Hardware::SensorData Round(Hardware::SensorData sensorData,
-                                                              std::size_t precision = 3U) noexcept
+    [[nodiscard]] static constexpr Hardware::SensorData Round(
+        Hardware::SensorData sensorData,
+        std::size_t precision = 3U) noexcept
     {
       auto magnitude = static_cast<float>(std::pow(10, precision));
 

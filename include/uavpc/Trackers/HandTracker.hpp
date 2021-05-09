@@ -25,8 +25,8 @@ namespace uavpc::Trackers
    */
   class HandTracker
   {
-    const Hardware::Mpu6050 m_Mpu6050;
-    const std::shared_ptr<const IGestureService> m_GestureService;
+    Hardware::Mpu6050 m_Mpu6050;
+    std::shared_ptr<IGestureService> m_GestureService;
 
     Hardware::SensorData m_Angles;
     Hardware::SensorData m_Distances;
@@ -78,9 +78,9 @@ namespace uavpc::Trackers
      * Initializes a uavpc::Trackers::HandTracker using an MPU-6050 to gather accelerometer and gyroscope data.
      * It starts an updater thread, used to compute the distances and angles of the MEMS' axis.
      */
-    explicit HandTracker(Hardware::Mpu6050&& mpu6050, std::shared_ptr<const IGestureService> gestureService) noexcept;
+    explicit HandTracker(Hardware::Mpu6050 mpu6050, std::shared_ptr<IGestureService> gestureService) noexcept;
 
-    HandTracker(const HandTracker& other) = delete;
+    HandTracker(const HandTracker& other) noexcept;
     HandTracker(HandTracker&& other) = delete;
     HandTracker& operator=(const HandTracker& other) = delete;
     HandTracker& operator=(HandTracker&& other) = delete;
@@ -99,12 +99,12 @@ namespace uavpc::Trackers
      */
     [[nodiscard]] Hardware::SensorData GetDistances() noexcept;
 
-    /** @brief Get the current gesture.
-     *  @returns An std::uint16_t containing the current gesture.
+    /** @brief Get the current gestures.
+     *  @returns An std::uint16_t containing the current gestures.
      *
-     *  Get the current gesture, as a combination of uavpc::Trackers::Gesture values.
+     *  Get the current gestures, as a combination of uavpc::Trackers::Gesture values.
      */
-    [[nodiscard]] std::uint16_t GetGesture() noexcept;
+    [[nodiscard]] std::uint16_t GetGestures() noexcept;
   };
 }  // namespace uavpc::Trackers
 

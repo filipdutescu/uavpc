@@ -17,7 +17,7 @@ namespace uavpc::Trackers
    public:
     IGestureService() = default;
     IGestureService(const IGestureService&) = delete;
-    IGestureService(IGestureService&&) = delete;
+    IGestureService(IGestureService&&) = default;
     IGestureService& operator=(const IGestureService&) = delete;
     IGestureService& operator=(IGestureService&&) = delete;
     virtual ~IGestureService() = default;
@@ -33,8 +33,9 @@ namespace uavpc::Trackers
      *
      * If no gestures where found, the resulting std::uint16_t will hold the value of uavpc::Trackers::Gesture::NONE.
      */
-    [[nodiscard]] virtual std::uint16_t ParseGesturesFrom(const Hardware::SensorData& distances,
-                                                          const Hardware::SensorData& angles) const noexcept = 0;
+    [[nodiscard]] virtual std::uint16_t ParseGesturesFrom(
+        const Hardware::SensorData& distances,
+        const Hardware::SensorData& angles) const noexcept = 0;
   };
 }  // namespace uavpc::Trackers
 

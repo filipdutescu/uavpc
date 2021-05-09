@@ -43,8 +43,8 @@ namespace uavpc::Trackers
 
     /** @copydoc uavpc::Trackers::IGestureService::ParseGesturesFrom()
      */
-    [[nodiscard]] std::uint16_t ParseGesturesFrom(const Hardware::SensorData& distances,
-                                                  const Hardware::SensorData& angles) const noexcept override;
+    [[nodiscard]] std::uint16_t ParseGesturesFrom(const Hardware::SensorData& distances, const Hardware::SensorData& angles)
+        const noexcept override;
   };
 }  // namespace uavpc::Trackers
 

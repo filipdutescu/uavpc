@@ -62,7 +62,7 @@ namespace uavpc::Trackers
         angles = accelAngles;
       }
       angles.Z = gyroAngles.Z;
-      
+
       if (isAccelInsideThreshold(accelSum) || isGyroAboveThreshold(gyroSum))
       {
         updateAngles(angles);
@@ -137,15 +137,27 @@ namespace uavpc::Trackers
 
   bool HandTracker::isNewValueLowerThanMax(float axisValue, float axisChangeValue, float maximumAxisValue) noexcept
   {
-    return (axisValue < maximumAxisValue && axisChangeValue > 0.0F)
-      || (-maximumAxisValue < axisValue && axisChangeValue < 0.0F);
+    return (axisValue < maximumAxisValue && axisChangeValue > 0.0F) ||
+           (-maximumAxisValue < axisValue && axisChangeValue < 0.0F);
   }
 
-  HandTracker::HandTracker(Hardware::Mpu6050&& mpu6050, std::shared_ptr<const IGestureService> gestureService) noexcept
+  HandTracker::HandTracker(Hardware::Mpu6050 mpu6050, std::shared_ptr<IGestureService> gestureService) noexcept
       : m_Mpu6050(std::move(mpu6050)),
         m_GestureService(std::move(gestureService)),
         m_Angles(),
         m_Distances(),
+        m_DeltaTime(s_InitialDeltaTime),
+        m_UpdaterMutex(),
+        m_ShouldUpdate(true)
+  {
+    m_UpdaterThread = std::thread(&HandTracker::updateTracker, this);
+  }
+
+  HandTracker::HandTracker(const HandTracker& other) noexcept
+      : m_Mpu6050(other.m_Mpu6050),
+        m_GestureService(other.m_GestureService),
+        m_Angles(other.m_Angles),
+        m_Distances(other.m_Distances),
         m_DeltaTime(s_InitialDeltaTime),
         m_UpdaterMutex(),
         m_ShouldUpdate(true)
@@ -198,7 +210,7 @@ namespace uavpc::Trackers
     return distances;
   }
 
-  std::uint16_t HandTracker::GetGesture() noexcept
+  std::uint16_t HandTracker::GetGestures() noexcept
   {
     auto angles = GetAngles();
     auto distances = GetDistances();
