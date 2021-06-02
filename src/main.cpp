@@ -4,6 +4,8 @@
 #include "uavpc/Hardware/I2CService.hpp"
 #include "uavpc/Hardware/Mpu6050.hpp"
 #include "uavpc/Joystick.hpp"
+#include "uavpc/Pose/IPoseService.hpp"
+#include "uavpc/Pose/PoseService.hpp"
 #include "uavpc/Trackers/Gesture.hpp"
 #include "uavpc/Trackers/GestureService.hpp"
 #include "uavpc/Trackers/HandTracker.hpp"
@@ -21,6 +23,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/videoio.hpp>
+
+#include <openpose/core/datum.hpp>
 
 void showStream()
 {
@@ -181,9 +185,14 @@ class DjiTelloDroneController : public uavpc::Drone::DjiTelloController
   {
   }
 
-  void SendCommand(const std::string &command) override
+  void SendCommand(const std::string& command) override
   {
     std::cout << command << std::endl;
+  }
+
+  cv::VideoCapture GetVideoStream() override
+  {
+    return cv::VideoCapture(0);
   }
 };
 
@@ -207,6 +216,47 @@ class I2CService : public uavpc::Hardware::II2CService
   }
 };
 
+class PoseService : public uavpc::Pose::IPoseService
+{
+  using TDatumsSP = std::shared_ptr<std::vector<std::shared_ptr<op::Datum>>>;
+
+ public:
+  TDatumsSP DetectPoseFromFrame(const cv::Mat& frame) noexcept override
+  {
+    if (frame.empty())
+    {
+      return nullptr;
+    }
+    else
+    {
+      return nullptr;
+    }
+  }
+
+  void DisplayFrameWithPose(const TDatumsSP& frame) noexcept override
+  {
+    if (frame->empty())
+    {
+    }
+  }
+
+  void SetVideoStream(const cv::VideoCapture& videoStream) noexcept override
+  {
+    if (videoStream.isOpened())
+    {
+    }
+  }
+
+  void StartRecognition(cv::VideoCapture& videoStream) noexcept override
+  {
+    videoStream.isOpened();
+  }
+
+  void StopRecognition() noexcept override
+  {
+  }
+};
+
 int main()
 {
   // showStream();
@@ -216,9 +266,9 @@ int main()
   // handTrackerTesting();
 
   // constexpr std::uint8_t busAddress = 0x68;
-  // auto controller = uavpc::Drone::DjiTelloControllerFactory(false).GetController();
+  auto controller = uavpc::Drone::DjiTelloControllerFactory().GetController();
 
-  // auto i2cService = std::make_unique<uavpc::Hardware::I2CService>('1', busAddress);
+  //// auto i2cService = std::make_unique<uavpc::Hardware::I2CService>('1', busAddress);
   auto mpu6050 = uavpc::Hardware::Mpu6050(
       // std::move(i2cService),
       std::make_shared<I2CService>(),
@@ -226,9 +276,12 @@ int main()
 
   auto gestureService = std::make_shared<uavpc::Trackers::GestureService>();
   auto handTracker = uavpc::Trackers::HandTracker(mpu6050, gestureService);
-  auto controller = std::make_shared<DjiTelloDroneController>();
+  // auto controller = std::make_shared<DjiTelloDroneController>();
+  // auto poseService = std::make_shared<PoseService>();
 
-  uavpc::Joystick(controller, handTracker).Run();
+  auto poseService = std::make_shared<uavpc::Pose::PoseService>();
+
+  uavpc::Joystick(controller, handTracker, poseService).Run();
 
   return 0;
 }

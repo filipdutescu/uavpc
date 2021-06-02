@@ -32,7 +32,7 @@ help:
 
 test: ## run tests quickly with ctest
 	rm -rf build/
-	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION) -Duavpc_ENABLE_UNIT_TESTING=1
+	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION) -Duavpc_ENABLE_UNIT_TESTING=1 -DCMAKE_BUILD_TYPE="Release"
 	cmake --build build --config Release
 	cd build/ && ctest -C Release -VV
 
@@ -53,16 +53,16 @@ docs: ## generate Doxygen HTML documentation, including API docs
 
 install: ## install the package to the `INSTALL_LOCATION`
 	rm -rf build/
-	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION)
+	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION) -DCMAKE_BUILD_TYPE="Release"
 	cmake --build build --config Release
 	cmake --build build --target install --config Release
 
-build-release: ## build the package
+release: ## build the package
 	rm -rf build/
-	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION) -Duavpc_ENABLE_DOXYGEN=0 -Duavpc_ENABLE_UNIT_TESTING=0
-	cmake --build build --config Release
+	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION) -DCMAKE_BUILD_TYPE="Release" -Duavpc_ENABLE_DOXYGEN=0 -Duavpc_ENABLE_UNIT_TESTING=0
+	cmake --build build --config Release -j4
 
-format-sources: ## format the project sources
+format: ## format the project sources
 	rm -rf build/
 	cmake -Bbuild -DCMAKE_INSTALL_PREFIX=$(INSTALL_LOCATION)
 	cmake --build build --target clang-format

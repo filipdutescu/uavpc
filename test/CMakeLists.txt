@@ -74,10 +74,15 @@ foreach(file ${test_sources})
   #
 
   find_package(OpenCV REQUIRED)
+  find_package(Threads REQUIRED)
+  find_package(OpenPose REQUIRED)
   target_link_libraries(
     ${test_name}_Test
     PUBLIC
       ${OpenCV_LIBS}
+      ${CMAKE_THREAD_LIBS_INIT}
+      ${OpenPose_LIBS}
+      i2c
   )
 
   #

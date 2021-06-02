@@ -2,6 +2,7 @@
 #define UAVPC_JOYSTICK_HPP_
 
 #include "uavpc/Drone/IController.hpp"
+#include "uavpc/Pose/IPoseService.hpp"
 #include "uavpc/Trackers/HandTracker.hpp"
 
 #include <memory>
@@ -15,6 +16,7 @@ namespace uavpc
   {
     const std::shared_ptr<Drone::IController> m_DroneController;
     Trackers::HandTracker m_HandTracker;
+    const std::shared_ptr<Pose::IPoseService> m_PoseService;
     bool m_ShouldRun;
 
    public:
@@ -23,10 +25,13 @@ namespace uavpc
      *  the drone and to convert gestures to commands.
      *  @param[in] handTracker A uavpc::Trackers::HandTracker instance used to track a hand and get the current
      *  gestures.
+     *  @param[in] poseService A uavpc::Pose::IPoseService instance used to detect and display poses in the video stream of
+     * the drone
      */
     explicit Joystick(
         std::shared_ptr<Drone::IController> droneController,
-        const Trackers::HandTracker& handTracker) noexcept;
+        const Trackers::HandTracker& handTracker,
+        std::shared_ptr<Pose::IPoseService> poseService) noexcept;
 
     Joystick(const Joystick&) = delete;
     Joystick(Joystick&&) = delete;
@@ -38,7 +43,8 @@ namespace uavpc
      *
      * A blocking method which, through an internal loop, controlls the drone by parsing the current gestures into
      * commands. During this time, it also awaits for the stop command from user, in order to land the drone and
-     * stop the loop.
+     * stop the loop. It also starts displaying the recognised poses, if any are recognised, on top of the raw drone
+     * video stream.
      */
     void Run() noexcept;
   };

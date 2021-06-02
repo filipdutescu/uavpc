@@ -11,6 +11,7 @@ set(sources
   src/uavpc/Exceptions/SocketCreationException.cpp
   src/uavpc/Hardware/I2CService.cpp
   src/uavpc/Hardware/Mpu6050.cpp
+  src/uavpc/Pose/PoseService.cpp
   src/uavpc/Trackers/GestureService.cpp
   src/uavpc/Trackers/HandTracker.cpp
   src/uavpc/Trackers/KalmanFilter.cpp
@@ -43,6 +44,8 @@ set(headers
   include/uavpc/Hardware/Mpu6050.hpp
   include/uavpc/Hardware/Mpu6050Options.hpp
   include/uavpc/Hardware/SensorData.hpp
+  include/uavpc/Pose/IPoseService.hpp
+  include/uavpc/Pose/PoseService.hpp
   include/uavpc/Trackers/Gesture.hpp
   include/uavpc/Trackers/GestureService.hpp
   include/uavpc/Trackers/HandTracker.hpp
