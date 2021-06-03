@@ -55,6 +55,7 @@ include(cmake/Vcpkg.cmake)
 # Find all headers and implementation files
 include(cmake/SourcesAndHeaders.cmake)
 
+set(CMAKE_CXX_STANDARD 17)
 if(${PROJECT_NAME}_BUILD_EXECUTABLE)
   add_executable(${PROJECT_NAME} ${exe_sources})
 
@@ -92,7 +93,6 @@ message(STATUS "Added all header and implementation files.\n")
 # Set the project standard and warnings
 #
 
-set(CMAKE_CXX_STANDARD 17)
 if(${PROJECT_NAME}_BUILD_HEADERS_ONLY)
   target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 else()
