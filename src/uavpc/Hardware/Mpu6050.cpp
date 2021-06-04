@@ -29,8 +29,8 @@ namespace uavpc::Hardware
     {
       logCurrentCalibrationProgress(
           static_cast<float>(i + 1U) / static_cast<float>(m_Options.NoCalibrationIterations) * 100.0F);
-      auto currentAccelData = GetAccelerometerData();
-      auto currentGyroData = GetGyroscopeData();
+      auto currentAccelData = GetRawAccelerometerData();
+      auto currentGyroData = GetRawGyroscopeData();
 
       accelData += currentAccelData;
       gyroData += currentGyroData;
@@ -81,7 +81,17 @@ namespace uavpc::Hardware
     std::cout << ss.str() << std::endl;
   }
 
-  SensorData Mpu6050::GetAccelerometerData() const noexcept
+  SensorData Mpu6050::GetAccelerometerOffset() const noexcept
+  {
+    return Utils::MathsHelper::Round(m_AccelOffset);
+  }
+
+  SensorData Mpu6050::GetGyroscopeOffset() const noexcept
+  {
+    return Utils::MathsHelper::Round(m_GyroOffset);
+  }
+
+  SensorData Mpu6050::GetRawAccelerometerData() const noexcept
   {
     auto data = SensorData();
 
@@ -89,10 +99,10 @@ namespace uavpc::Hardware
     data.Y = static_cast<float>(static_cast<std::int16_t>(m_I2CService->ReadWordData(m_Options.AccelYRegisterHigh)));
     data.Z = static_cast<float>(static_cast<std::int16_t>(m_I2CService->ReadWordData(m_Options.AccelZRegisterHigh)));
 
-    return Utils::MathsHelper::Round(data / static_cast<float>(m_Options.AccelerometerRange) - m_AccelOffset);
+    return Utils::MathsHelper::Round(data);
   }
 
-  SensorData Mpu6050::GetGyroscopeData() const noexcept
+  SensorData Mpu6050::GetRawGyroscopeData() const noexcept
   {
     auto data = SensorData();
 
@@ -100,6 +110,25 @@ namespace uavpc::Hardware
     data.Y = static_cast<float>(static_cast<std::int16_t>(m_I2CService->ReadWordData(m_Options.GyroYRegisterHigh)));
     data.Z = static_cast<float>(static_cast<std::int16_t>(m_I2CService->ReadWordData(m_Options.GyroZRegisterHigh)));
 
-    return Utils::MathsHelper::Round(data / static_cast<float>(m_Options.GyroscopeRange) - m_GyroOffset);
+    return Utils::MathsHelper::Round(data);
+  }
+
+  SensorData Mpu6050::GetAccelerometerData() const noexcept
+  {
+    auto data = GetRawAccelerometerData();
+
+    return Utils::MathsHelper::Round((data - m_AccelOffset) / static_cast<float>(m_Options.AccelerometerRange));
+  }
+
+  SensorData Mpu6050::GetGyroscopeData() const noexcept
+  {
+    auto data = GetRawGyroscopeData();
+
+    return Utils::MathsHelper::Round((data - m_GyroOffset) / static_cast<float>(m_Options.GyroscopeRange));
+  }
+
+  Mpu6050Options Mpu6050::GetOptions() const noexcept
+  {
+    return m_Options;
   }
 }  // namespace uavpc::Hardware

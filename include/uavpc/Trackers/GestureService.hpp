@@ -13,8 +13,8 @@ namespace uavpc::Trackers
    */
   class GestureService : public IGestureService
   {
-    static constexpr float s_TiltLeftRightThreshold = 45.0F;
-    static constexpr float s_TiltUpDownThreshold = 75.0F;
+    static constexpr float s_TiltLeftRightThreshold = 50.0F;
+    static constexpr float s_TiltUpDownThreshold = 50.0F;
     static constexpr float s_ForwardBackwardThreshold = 4.0F;
     static constexpr float s_LeftRightThreshold = 4.0F;
     static constexpr float s_UpDownThreshold = 4.0F;

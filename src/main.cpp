@@ -222,7 +222,7 @@ int main()
   auto mpu6050 = uavpc::Hardware::Mpu6050(
       // std::move(i2cService),
       std::make_shared<I2CService>(),
-      uavpc::Hardware::Mpu6050Options(uavpc::Hardware::AccelerometerRange::G8, uavpc::Hardware::GyroscopeRange::DEGS1000));
+      uavpc::Hardware::Mpu6050Options(uavpc::Hardware::AccelerometerRange::G8, uavpc::Hardware::GyroscopeRange::DEGS250));
 
   auto gestureService = std::make_shared<uavpc::Trackers::GestureService>();
   auto handTracker = uavpc::Trackers::HandTracker(mpu6050, gestureService);

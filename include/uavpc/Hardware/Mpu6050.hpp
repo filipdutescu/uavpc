@@ -47,6 +47,26 @@ namespace uavpc::Hardware
     Mpu6050& operator=(Mpu6050&&) = delete;
     ~Mpu6050() = default;
 
+    /** @brief Retrieves the raw accelerometer offset;
+     *  @returns an uavpc::Hardware::SensorData instance, with the raw accelerometer offset.
+     */
+    [[nodiscard]] SensorData GetAccelerometerOffset() const noexcept;
+
+    /** @brief Retrieves the raw gyroscope offset;
+     *  @returns an uavpc::Hardware::SensorData instance, with the raw gyroscope offset.
+     */
+    [[nodiscard]] SensorData GetGyroscopeOffset() const noexcept;
+
+    /** @brief Retrieves the current raw accelerometer data.
+     *  @returns an uavpc::Hardware::SensorData instance, with the current raw accelerometer data.
+     */
+    [[nodiscard]] SensorData GetRawAccelerometerData() const noexcept;
+
+    /** @brief Retrieves the current raw gyroscope data.
+     *  @returns an uavpc::Hardware::SensorData instance, with the current raw gyroscope data.
+     */
+    [[nodiscard]] SensorData GetRawGyroscopeData() const noexcept;
+
     /** @brief Retrieves the current accelerometer data.
      *  @returns an uavpc::Hardware::SensorData instance, with the current accelerometer data.
      */
@@ -56,6 +76,11 @@ namespace uavpc::Hardware
      *  @returns an uavpc::Hardware::SensorData instance, with the current gyroscope data.
      */
     [[nodiscard]] SensorData GetGyroscopeData() const noexcept;
+
+    /** @brief Retrieves the current Mpu6050 options.
+     *  @returns an uavpc::Hardware::Mpu6050Options instance, with the current options.
+     */
+    [[nodiscard]] Mpu6050Options GetOptions() const noexcept;
   };
 }  // namespace uavpc::Hardware
 

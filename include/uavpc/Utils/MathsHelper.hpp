@@ -11,16 +11,13 @@ namespace uavpc::Utils
    */
   class MathsHelper
   {
-    static constexpr float s_ConversionDegrees = 180.0F;
-    static constexpr float s_RotationDegrees = 90.0F;
+    static constexpr float s_RadToDeg = 57.2957914331F;
 
    public:
-    static constexpr float PI = std::atan(1.0F) * 4.0F;
-
     /** @brief Round the received SensorData to the given number of decimals.
-     *  @param[in] sensorData The sensorData to be rounded.
+     *  @param[in] sensorData The uavpc::Hardware::SensorData to be rounded.
      *  @param[in] precision Default: 3. The precision the values should be rounded to.
-     *  @returns A new SensorData instance containing the rounded values.
+     *  @returns A new uavpc::Hardware::SensorData instance containing the rounded values.
      */
     [[nodiscard]] static constexpr Hardware::SensorData Round(
         Hardware::SensorData sensorData,
@@ -39,10 +36,22 @@ namespace uavpc::Utils
     }
 
     /** @brief Convert the sensor data to angles measured in degrees.
-     *  @param[in] sensorData The sensor data to be converted to angles.
-     *  @returns A new SensorData instance containing the angles of the one received.
+     *  @param[in] sensorData The uavpc::Hardware::SensorData who's values are to be converted to angles.
+     *  @returns A new uavpc::Hardware::SensorData instance containing the angles of the one received.
      */
     [[nodiscard]] static Hardware::SensorData ConvertToAngles(const Hardware::SensorData& sensorData) noexcept;
+
+    /** @brief Sum the two sensor data instances, proportionally, with weights computed from the given value tau.
+     *  @param[in] sensorData1 A uavpc::Hardware::SensorData instance, which will be weighted with <tt>1 - tau</tt>.
+     *  @param[in] sensorData2 A uavpc::Hardware::SensorData instance, which will be weighted with <tt>tau</tt>.
+     *  @param[in] tau A double value used to compute the individual weights of each sum operand.
+     *  @returns A uavpc::Hardware::SensorData containing the result of the weighted sum for each axis.
+     */
+    [[nodiscard]] static constexpr Hardware::SensorData
+    WeightedSum(const Hardware::SensorData& sensorData1, const Hardware::SensorData& sensorData2, double tau) noexcept
+    {
+      return sensorData1 * (1.0 - tau) + sensorData2 * tau;
+    }
   };
 }  // namespace uavpc::Utils
 
