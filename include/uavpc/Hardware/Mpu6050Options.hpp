@@ -69,7 +69,7 @@ namespace uavpc::Hardware
       static constexpr std::uint8_t PowerRegister = 0x6b;
       static constexpr std::uint8_t PowerRegisterValue = 0b00000000;
       static constexpr std::uint8_t DlpfRegister = 0x1a;
-      static constexpr std::uint8_t DlpfRegisterValue = 0b00000100;
+      static constexpr std::uint8_t DlpfRegisterValue = 0b00000110;
       static constexpr std::uint8_t SampleRateRegister = 0x19;
       static constexpr std::uint8_t SampleRateRegisterValue = 0b00001001;
 

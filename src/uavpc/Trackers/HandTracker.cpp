@@ -2,6 +2,7 @@
 
 #include "uavpc/Hardware/SensorData.hpp"
 #include "uavpc/Trackers/Gesture.hpp"
+#include "uavpc/Trackers/KalmanFilter.hpp"
 #include "uavpc/Utils/MathsHelper.hpp"
 
 #include <cmath>
@@ -15,62 +16,54 @@ namespace uavpc::Trackers
 
   void HandTracker::updateTracker() noexcept
   {
-    static bool isFirstRun = true;
-    auto startTime = clock::now();
+    auto kalmanX = KalmanFilter();
+    auto kalmanY = KalmanFilter();
 
+    m_Angles = Utils::MathsHelper::ConvertToAngles(m_Mpu6050.GetRawAccelerometerData());
+    kalmanX.SetAngle(m_Angles.X);
+    kalmanY.SetAngle(m_Angles.Y);
+
+    auto startTime = clock::now();
     while (m_ShouldUpdate)
     {
-      auto accelData = m_Mpu6050.GetAccelerometerData();
-      auto gyroData = m_Mpu6050.GetGyroscopeData();
+      auto accelData = m_Mpu6050.GetRawAccelerometerData();
+      auto gyroData = m_Mpu6050.GetRawGyroscopeData();
 
-      auto distances = accelData * m_DeltaTime * 0.1;
-      auto angles = Hardware::SensorData();
+      // auto distances = accelData * m_DeltaTime;
 
+      while (!m_UpdaterMutex.try_lock())
+      {
+        std::this_thread::sleep_for(s_MutexTryLockWaitTime);
+      }
+
+      auto kalmanAngles = m_Angles;
+
+      m_UpdaterMutex.unlock();
+
+      auto gyroAngles = gyroData / static_cast<float>(m_Mpu6050.GetOptions().GyroscopeRange);
       auto accelAngles = Utils::MathsHelper::ConvertToAngles(accelData);
-      auto gyroAngles = gyroData * m_DeltaTime;
-      if (isFirstRun)
+
+      if ((accelAngles.X < -90 && kalmanAngles.X > 90) || (accelAngles.X > 90 && kalmanAngles.X < -90))
       {
-        gyroAngles = accelAngles;
-        gyroAngles.Z = 0;
-        isFirstRun = false;
+        kalmanX.SetAngle(accelAngles.X);
+        kalmanAngles.X = accelAngles.X;
+      }
+      else
+      {
+        kalmanAngles.X = kalmanX.GetAngle(accelAngles.X, gyroAngles.X, static_cast<float>(m_DeltaTime));
       }
 
-      auto accelSum = std::abs(accelData.X) + std::abs(accelData.Y) + std::abs(accelData.Z);
-      auto gyroSum = std::abs(gyroData.X) + std::abs(gyroData.Y) + std::abs(gyroData.Z);
+      if (std::abs(kalmanAngles.X) > 90)
+      {
+        gyroAngles.Y = -gyroAngles.Y;
+      }
+      kalmanAngles.Y = kalmanY.GetAngle(accelAngles.Y, gyroAngles.Y, static_cast<float>(m_DeltaTime));
 
-      constexpr auto gyroAccelDiffThreshold = 5.0F;
-      if (std::abs(gyroAngles.X - accelAngles.X) > gyroAccelDiffThreshold)
-      {
-        gyroAngles.X = accelAngles.X;
-      }
-      if (std::abs(gyroAngles.Y - accelAngles.Y) > gyroAccelDiffThreshold)
-      {
-        gyroAngles.Y = accelAngles.Y;
-      }
-
-      if (isAccelInsideThreshold(accelSum) && isGyroAboveThreshold(gyroSum))
-      {
-        constexpr auto tau = 0.05F;  // TODO: rename + var
-        angles = gyroAngles * (1.0F - tau) + accelAngles * tau;
-      }
-      else if (isGyroAboveThreshold(gyroSum))
-      {
-        angles = gyroAngles;
-      }
-      else if (!isGyroAboveThreshold(gyroSum))
-      {
-        angles = accelAngles;
-      }
-      angles.Z = gyroAngles.Z;
-
-      if (isAccelInsideThreshold(accelSum) || isGyroAboveThreshold(gyroSum))
-      {
-        updateAngles(angles);
-      }
-      if (isAccelInsideThreshold(accelSum))
-      {
-        updateDistances(distances);
-      }
+      updateAngles(kalmanAngles);
+      // if (isAccelInsideThreshold(accelSum))
+      //{
+      //  updateDistances(distances);
+      //}
 
       auto endTime = clock::now();
       m_DeltaTime = static_cast<double>((endTime - startTime) / 1ms);
@@ -95,9 +88,7 @@ namespace uavpc::Trackers
       std::this_thread::sleep_for(s_MutexTryLockWaitTime);
     }
 
-    m_Angles.X = computeNewAxisValue(m_Angles.X, angles.X, s_MaximumAxisAngle);
-    m_Angles.Y = computeNewAxisValue(m_Angles.Y, angles.Y, s_MaximumAxisAngle);
-    m_Angles.Z = computeNewAxisValue(m_Angles.Z, angles.Z, s_MaximumAxisAngle);
+    m_Angles = angles;
 
     m_UpdaterMutex.unlock();
   }

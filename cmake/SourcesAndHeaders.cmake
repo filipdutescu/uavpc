@@ -13,6 +13,7 @@ set(sources
   src/uavpc/Hardware/Mpu6050.cpp
   src/uavpc/Trackers/GestureService.cpp
   src/uavpc/Trackers/HandTracker.cpp
+  src/uavpc/Trackers/KalmanFilter.cpp
   src/uavpc/Utils/MathsHelper.cpp
   src/uavpc/Utils/UdpClient.cpp
 )
@@ -46,6 +47,7 @@ set(headers
   include/uavpc/Trackers/GestureService.hpp
   include/uavpc/Trackers/HandTracker.hpp
   include/uavpc/Trackers/IGestureService.hpp
+  include/uavpc/Trackers/KalmanFilter.hpp
   include/uavpc/Utils/CompatibilityMacros.hpp
   include/uavpc/Utils/MathsHelper.hpp
   include/uavpc/Utils/UdpClient.hpp

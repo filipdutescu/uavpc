@@ -6,9 +6,9 @@ namespace uavpc::Utils
   {
     auto result = Hardware::SensorData();
 
-    result.X = (s_ConversionDegrees / PI) * std::atan2(sensorData.Z, sensorData.Y) - s_RotationDegrees;
-    result.Y = (s_ConversionDegrees / PI) * std::atan2(sensorData.Z, sensorData.X) - s_RotationDegrees;
-    result.Z = (s_ConversionDegrees / PI) * std::atan2(sensorData.Y, sensorData.X) - s_RotationDegrees;
+    result.X = std::atan2(sensorData.Y, sensorData.Z) * s_RadToDeg;
+    result.Y = std::atan2(-sensorData.X, std::sqrt(sensorData.Y * sensorData.Y + sensorData.Z * sensorData.Z)) * s_RadToDeg;
+    result.Z = 0.0F;
 
     return result;
   }
