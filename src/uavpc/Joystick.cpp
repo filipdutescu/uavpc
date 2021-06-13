@@ -20,12 +20,20 @@ namespace uavpc
 
   void Joystick::Run() noexcept
   {
+    std::mutex mutex;
+    constexpr auto mutexWaitTime = 0.5s;
+
     m_ShouldRun = true;
     std::thread runThread([&] {
-      constexpr auto waitTime = 0.5s;
+      //constexpr auto waitTime = 0.5s;
       while (m_ShouldRun)
       {
         auto gestures = m_HandTracker.GetGestures();
+
+        while (!mutex.try_lock())
+        {
+          std::this_thread::sleep_for(mutexWaitTime);
+        }
         auto commands = m_DroneController->GetCommands(gestures);
 
         for (const auto& command : commands)
@@ -33,11 +41,12 @@ namespace uavpc
           m_DroneController->SendCommand(command);
         }
 
-        std::this_thread::sleep_for(waitTime);
+        mutex.unlock();
+        //std::this_thread::sleep_for(waitTime);
       }
     });
 
-    std::string input = "q";
+    std::string input;
     while (m_ShouldRun)
     {
       std::getline(std::cin, input);
@@ -45,6 +54,15 @@ namespace uavpc
       if (input == "q" || input == "quit")
       {
         m_ShouldRun = false;
+      }
+      else if (input.find_first_of("c ") == 0)
+      {
+        while (!mutex.try_lock())
+        {
+          std::this_thread::sleep_for(mutexWaitTime);
+        }
+        m_DroneController->SendCommand(input.substr(2));
+        mutex.unlock();
       }
     }
 
