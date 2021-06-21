@@ -1,0 +1,21 @@
+diff --git a/src/openpose/calibration/cameraParameterEstimation.cpp b/src/openpose/calibration/cameraParameterEstimation.cpp
+index 46b7bbd..47ed3f6 100644
+--- a/src/openpose/calibration/cameraParameterEstimation.cpp
++++ b/src/openpose/calibration/cameraParameterEstimation.cpp
+@@ -9,6 +9,7 @@
+     #include <Eigen/Dense>
+     #include <opencv2/core/eigen.hpp>
+ #endif
++#include <opencv2/calib3d.hpp>
+ #include <openpose/3d/cameraParameterReader.hpp>
+ #include <openpose/filestream/fileStream.hpp>
+ #include <openpose/utilities/fastMath.hpp>
+diff --git a/src/openpose/calibration/gridPatternFunctions.cpp b/src/openpose/calibration/gridPatternFunctions.cpp
+index 20731eb..76e0e37 100644
+--- a/src/openpose/calibration/gridPatternFunctions.cpp
++++ b/src/openpose/calibration/gridPatternFunctions.cpp
+@@ -1,3 +1,4 @@
++#include <opencv2/calib3d/calib3d.hpp>
+ #include <openpose_private/calibration/gridPatternFunctions.hpp>
+ #include <openpose/utilities/fastMath.hpp>
+ #include <openpose/utilities/fileSystem.hpp>

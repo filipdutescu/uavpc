@@ -74,10 +74,17 @@ endif()
 
 set_target_properties(${PROJECT_NAME}
   PROPERTIES
-  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}"
 )
+if(${PROJECT_NAME}_ENABLE_UNIT_TESTING)
+  set_target_properties(${PROJECT_NAME}_LIB
+    PROPERTIES
+      ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
+      LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE}"
+      OUTPUT_NAME ${PROJECT_NAME})
+endif()
 
 verbose_message("Found the following header files:")
 verbose_message(${headers})
@@ -118,14 +125,16 @@ include(cmake/Doxygen.cmake)
 #
 
 # Identify and link with the specific "packages" the project uses
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 4.5.0 REQUIRED)
 find_package(Threads REQUIRED)
+find_package(OpenPose REQUIRED)
 
 target_link_libraries(
   ${PROJECT_NAME}
   PUBLIC
     ${OpenCV_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
+    ${OpenPose_LIBS}
     i2c
 )
 if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
@@ -134,6 +143,7 @@ if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
     PUBLIC
       ${OpenCV_LIBS}
       ${CMAKE_THREAD_LIBS_INIT}
+      ${OpenPose_LIBS}
       i2c
   )
 endif()
@@ -166,6 +176,7 @@ else()
     SYSTEM
     PUBLIC 
       ${OpenCV_INCLUDE_DIRS}
+      ${OpenPose_INCLUDE_DIRS}
   )
 
   if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
@@ -182,6 +193,7 @@ else()
       SYSTEM
       PUBLIC 
         ${OpenCV_INCLUDE_DIRS}
+        ${OpenPose_INCLUDE_DIRS}
     )
 	endif()
 endif()

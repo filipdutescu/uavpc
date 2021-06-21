@@ -24,7 +24,7 @@ jobs:
       id: cache
       with:
         path: ${{ github.workspace }}/${{ env.install_location }}
-        key: ${{ runner.os }}-dependencies-v1
+        key: ${{ runner.os }}-dependencies-v2
 
     - name: install Catch2
       if: steps.cache.outputs.cache-hit != 'true'
@@ -37,6 +37,9 @@ jobs:
         cmake --build build --config Release -j4
         cmake --build build --target install --config Release
 
+    - name: install OpenBLAS
+      run: sudo apt install -y libopenblas-dev
+    
     - name: install OpenCV
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
@@ -44,20 +47,64 @@ jobs:
         git clone https://github.com/opencv/opencv.git --branch 4.5.0
         cd opencv
         cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} \
-          -DBUILD_LIST=videoio,highgui\
-          -DBUILD_PERF_TESTS:BOOL=OFF -DBUILD_TESTS:BOOL=OFF -DBUILD_DOCS:BOOL=OFF -DBUILD_EXAMPLES:BOOL=OFF\
-          -DBUILD_opencv_apps:BOOL=OFF\
+          -DBUILD_LIST=videoio,video,core,highgui,imgcodecs,calib3d,dnn,objdetect,features2d \
+          -DBUILD_PERF_TESTS:BOOL=OFF -DBUILD_TESTS:BOOL=OFF -DBUILD_DOCS:BOOL=OFF -DBUILD_EXAMPLES:BOOL=OFF \
+          -DBUILD_opencv_apps:BOOL=OFF \
           -DBUILD_FAT_JAVA_LIB:BOOL=OFF -DBUILD_JAVA:BOOL=OFF
         cmake --build build --config Release -j4
         cmake --build build --target install --config Release
+
+    - name: install the Protobuf library
+      run: sudo apt install -y protobuf-compiler libprotobuf-dev
+
+    - name: install the HDF5 library
+      run: sudo apt install -y libhdf5-dev
+
+    - name: install the Boost library
+      run: sudo apt install -y libboost-all-dev
+
+    - name: install the glog and gflags libraries
+      run: sudo apt install -y libgflags-dev libgoogle-glog-dev
+
+    - name: install Caffe
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        cd ..
+        git clone https://github.com/CMU-Perceptual-Computing-Lab/caffe.git
+        git clone https://aur.archlinux.org/caffe.git caffe-patch
+        cd caffe
+        cp -v ../caffe-patch/caffe-1.0-opencv4-fix.patch .
+        patch -d . -Np1 -i ./caffe-1.0-opencv4-fix.patch || echo "Patch applied"
+        cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} \
+            -DBLAS=open \
+            -DCPU_ONLY=ON \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_docs=OFF \
+            -DBUILD_python=OFF \
+            -DBUILD_python_layer=OFF \
+            -DUSE_LEVELDB=OFF \
+            -DUSE_LMDB=OFF \
+            -DUSE_OPENCV=ON
+        cmake --build build --config Release -j4
+        cmake --build build --target install --config Release
+
+    - name: link Caffe lib to /usr/lib (OpenPose bug)
+      run: sudo ln -s ${{ github.workspace }}/${{ env.install_location }}/lib/libcaffe.so /usr/lib/libcaffe.so
 
     - name: install OpenPose
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
         cd ..
         git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose.git --branch v1.7.0
-        cd opencv
+        cd openpose
+        cp -v ../uavpc/vendor/openpose-opencv4.patch .
+        patch -d . -Np1 -i ./openpose-opencv4.patch
         cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} \
+          -DCMAKE_BUILD_TYPE:STRING="Release" \
+          -DBUILD_CAFFE:BOOL=OFF \
+          -DCaffe_INCLUDE_DIRS:PATH=${{ github.workspace }}/${{ env.install_location }}/include \
+          -DCaffe_LIBS:PATH=${{ github.workspace }}/${{ env.install_location }}/lib/libcaffe.so \
+          -DGPU_MODE:STRING=CPU_ONLY \
           -DDOWNLOAD_FACE_MODEL:BOOL=OFF\
           -DDOWNLOAD_HAND_MODEL:BOOL=OFF\
           -DBUILD_EXAMPLES:BOOL=OFF\
@@ -70,7 +117,11 @@ jobs:
       run: sudo apt install -y libi2c-dev
 
     - name: configure
-      run: cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} -Duavpc_ENABLE_CODE_COVERAGE=1 -Duavpc_ENABLE_DOXYGEN=0
+      run: |
+        cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} \
+          -DCMAKE_BUILD_TYPE:STRING=${{ env.build_type }} \
+          -Duavpc_ENABLE_CODE_COVERAGE=1 \
+          -Duavpc_ENABLE_DOXYGEN=0
       
     - name: build
       run: cmake --build build --config ${{ env.build_type }} -j4

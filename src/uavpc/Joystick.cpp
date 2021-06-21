@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <chrono>
 #include <iostream>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -11,9 +12,13 @@ namespace uavpc
 {
   using namespace std::chrono_literals;
 
-  Joystick::Joystick(std::shared_ptr<Drone::IController> droneController, const Trackers::HandTracker& handTracker) noexcept
+  Joystick::Joystick(
+      std::shared_ptr<Drone::IController> droneController,
+      const Trackers::HandTracker& handTracker,
+      std::shared_ptr<Pose::IPoseService> poseService) noexcept
       : m_DroneController(std::move(droneController)),
         m_HandTracker(handTracker),
+        m_PoseService(std::move(poseService)),
         m_ShouldRun(false)
   {
   }
@@ -23,28 +28,34 @@ namespace uavpc
     std::mutex mutex;
     constexpr auto mutexWaitTime = 0.5s;
 
+    auto videoStream = m_DroneController->GetVideoStream();
+    // m_PoseService->SetVideoStream(m_DroneController->GetVideoStream());
+    m_PoseService->StartRecognition(videoStream);
     m_ShouldRun = true;
-    std::thread runThread([&] {
-      //constexpr auto waitTime = 0.5s;
-      while (m_ShouldRun)
-      {
-        auto gestures = m_HandTracker.GetGestures();
 
-        while (!mutex.try_lock())
+    std::thread runThread(
+        [&]
         {
-          std::this_thread::sleep_for(mutexWaitTime);
-        }
-        auto commands = m_DroneController->GetCommands(gestures);
+          // constexpr auto waitTime = 0.5s;
+          while (m_ShouldRun)
+          {
+            auto gestures = m_HandTracker.GetGestures();
 
-        for (const auto& command : commands)
-        {
-          m_DroneController->SendCommand(command);
-        }
+            while (!mutex.try_lock())
+            {
+              std::this_thread::sleep_for(mutexWaitTime);
+            }
+            auto commands = m_DroneController->GetCommands(gestures);
 
-        mutex.unlock();
-        //std::this_thread::sleep_for(waitTime);
-      }
-    });
+            for (const auto& command : commands)
+            {
+              m_DroneController->SendCommand(command);
+            }
+
+            mutex.unlock();
+            // std::this_thread::sleep_for(waitTime);
+          }
+        });
 
     std::string input;
     while (m_ShouldRun)
@@ -66,6 +77,7 @@ namespace uavpc
       }
     }
 
+    m_PoseService->StopRecognition();
     if (runThread.joinable())
     {
       runThread.join();
