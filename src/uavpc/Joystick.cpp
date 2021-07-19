@@ -25,6 +25,8 @@ namespace uavpc
 
   void Joystick::Run() noexcept
   {
+    using clock = std::chrono::high_resolution_clock;
+
     std::mutex mutex;
     constexpr auto mutexWaitTime = 0.5s;
 
@@ -35,7 +37,7 @@ namespace uavpc
     std::thread runThread(
         [&]
         {
-          // constexpr auto waitTime = 0.5s;
+          auto startTime = clock::now();
           while (m_ShouldRun)
           {
             auto gestures = m_HandTracker.GetGestures();
@@ -52,7 +54,13 @@ namespace uavpc
             }
 
             mutex.unlock();
-            // std::this_thread::sleep_for(waitTime);
+
+            auto now = clock::now();
+            if (commands.empty() && (now - startTime >= 10s))
+            {
+              m_DroneController->GetBattery();
+              startTime = now;
+            }
           }
         });
 

@@ -14,7 +14,10 @@
 
 namespace uavpc::Pose
 {
-  PoseService::PoseService() noexcept : m_OpenPoseWrapper(op::ThreadManagerMode::Asynchronous), m_ShouldRun(false), m_WithRecognition(false)
+  PoseService::PoseService() noexcept
+      : m_OpenPoseWrapper(op::ThreadManagerMode::Asynchronous),
+        m_ShouldRun(false),
+        m_WithRecognition(false)
   {
   }
 
@@ -46,7 +49,6 @@ namespace uavpc::Pose
 
   TDatumsSP PoseService::DetectPoseFromFrame(const cv::Mat &frame) noexcept
   {
-
     const auto rawImage = OP_CV2OPCONSTMAT(frame);
 
     return m_OpenPoseWrapper.emplaceAndPop(rawImage);

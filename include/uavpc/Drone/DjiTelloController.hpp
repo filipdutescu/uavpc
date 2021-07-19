@@ -61,6 +61,10 @@ namespace uavpc::Drone
      */
     void SendCommand(const std::string& command) override;
 
+    /** @copydoc uavpc::Drone::Controller::GetBattery()
+     */
+    void GetBattery() override;
+
     /** @copydoc uavpc::Drone::Controller::GetCommands()
      */
     std::vector<std::string> GetCommands(const std::uint16_t& gestures) override;

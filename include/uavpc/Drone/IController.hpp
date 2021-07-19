@@ -34,6 +34,11 @@ namespace uavpc::Drone
      */
     virtual void SendCommand(const std::string& command) = 0;
 
+    /** @brief Send the command for getting the battery level.
+     *  @throws uavpc::Exceptions::SocketClosedException if the connection to the drone could not be established.
+     */
+    virtual void GetBattery() = 0;
+
     /** @brief Convert gestures received to a list of commands.
      *  @param[in] gestures An std::uint16_t containg the gestures to be converted to commands.
      *  @returns An std::vector of std::string values, representing the list of commands parsed from the given
