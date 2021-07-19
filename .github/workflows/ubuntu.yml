@@ -24,7 +24,7 @@ jobs:
       id: cache
       with:
         path: ${{ github.workspace }}/${{ env.install_location }}
-        key: ${{ runner.os }}-dependencies-v2
+        key: ${{ runner.os }}-dependencies-v3
 
     - name: install Catch2
       if: steps.cache.outputs.cache-hit != 'true'
@@ -105,10 +105,12 @@ jobs:
           -DCaffe_INCLUDE_DIRS:PATH=${{ github.workspace }}/${{ env.install_location }}/include \
           -DCaffe_LIBS:PATH=${{ github.workspace }}/${{ env.install_location }}/lib/libcaffe.so \
           -DGPU_MODE:STRING=CPU_ONLY \
-          -DDOWNLOAD_FACE_MODEL:BOOL=OFF\
-          -DDOWNLOAD_HAND_MODEL:BOOL=OFF\
-          -DBUILD_EXAMPLES:BOOL=OFF\
-          -DBUILD_PYTHON:BOOL=OFF\
+          -DDOWNLOAD_BODY_25_MODEL:BOOL=OFF \
+          -DDOWNLOAD_BODY_MPI_MODEL:BOOL=ON \
+          -DDOWNLOAD_FACE_MODEL:BOOL=OFF \
+          -DDOWNLOAD_HAND_MODEL:BOOL=OFF \
+          -DBUILD_EXAMPLES:BOOL=OFF \
+          -DBUILD_PYTHON:BOOL=OFF \
           -DBUILD_SHARED_LIBS:BOOL=OFF
         cmake --build build --config Release -j4
         cmake --build build --target install --config Release

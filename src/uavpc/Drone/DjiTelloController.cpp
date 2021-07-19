@@ -104,7 +104,7 @@ namespace uavpc::Drone
     SendCommand("streamon");
     std::stringstream ss;
 
-    ss << "udp://@" << m_VideoStreamUrl << ":" << m_VideoStreamPort;
+    ss << "udp://@" << m_VideoStreamUrl << ":" << m_VideoStreamPort << "?overrun_nonfatal=1&fifo_size=278877";
 
     auto uri = ss.str();
     auto videoStream = cv::VideoCapture(uri, cv::CAP_GSTREAMER);

@@ -240,11 +240,8 @@ class PoseService : public uavpc::Pose::IPoseService
     }
   }
 
-  void SetVideoStream(const cv::VideoCapture& videoStream) noexcept override
+  void ToggleRecognition() noexcept override
   {
-    if (videoStream.isOpened())
-    {
-    }
   }
 
   void StartRecognition(cv::VideoCapture& videoStream) noexcept override
@@ -266,7 +263,7 @@ int main()
   // handTrackerTesting();
 
   // constexpr std::uint8_t busAddress = 0x68;
-  auto controller = uavpc::Drone::DjiTelloControllerFactory().GetController();
+  //auto controller = uavpc::Drone::DjiTelloControllerFactory().GetController();
 
   //// auto i2cService = std::make_unique<uavpc::Hardware::I2CService>('1', busAddress);
   auto mpu6050 = uavpc::Hardware::Mpu6050(
@@ -276,7 +273,7 @@ int main()
 
   auto gestureService = std::make_shared<uavpc::Trackers::GestureService>();
   auto handTracker = uavpc::Trackers::HandTracker(mpu6050, gestureService);
-  // auto controller = std::make_shared<DjiTelloDroneController>();
+  auto controller = std::make_shared<DjiTelloDroneController>();
   // auto poseService = std::make_shared<PoseService>();
 
   auto poseService = std::make_shared<uavpc::Pose::PoseService>();

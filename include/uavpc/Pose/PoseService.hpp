@@ -8,6 +8,7 @@
 #include <thread>
 
 #include <opencv2/videoio.hpp>
+#include <openpose/wrapper/wrapper.hpp>
 
 namespace uavpc::Pose
 {
@@ -19,7 +20,9 @@ namespace uavpc::Pose
 
     std::thread m_RecognitionThread;
     std::mutex m_RecognitionMutex;
+    op::Wrapper m_OpenPoseWrapper;
     bool m_ShouldRun;
+    bool m_WithRecognition;
 
     static constexpr std::chrono::milliseconds s_MutexTryLockWaitTime = 5ms;
 
@@ -35,7 +38,7 @@ namespace uavpc::Pose
 
     void DisplayFrameWithPose(const TDatumsSP& frame) noexcept override;
 
-    void SetVideoStream(const cv::VideoCapture& videoStream) noexcept override;
+    void ToggleRecognition() noexcept override;
 
     void StartRecognition(cv::VideoCapture& videoStream) override;
 

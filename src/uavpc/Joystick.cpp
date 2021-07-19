@@ -29,7 +29,6 @@ namespace uavpc
     constexpr auto mutexWaitTime = 0.5s;
 
     auto videoStream = m_DroneController->GetVideoStream();
-    // m_PoseService->SetVideoStream(m_DroneController->GetVideoStream());
     m_PoseService->StartRecognition(videoStream);
     m_ShouldRun = true;
 
@@ -65,6 +64,10 @@ namespace uavpc
       if (input == "q" || input == "quit")
       {
         m_ShouldRun = false;
+      }
+      else if (input == "rec" || input == "recognition")
+      {
+        m_PoseService->ToggleRecognition();
       }
       else if (input.find_first_of("c ") == 0)
       {

@@ -32,7 +32,7 @@ namespace uavpc::Pose
 
     virtual void DisplayFrameWithPose(const TDatumsSP& frame) noexcept = 0;
 
-    virtual void SetVideoStream(const cv::VideoCapture& videoStream) noexcept = 0;
+    virtual void ToggleRecognition() noexcept = 0;
 
     virtual void StartRecognition(cv::VideoCapture& videoStream) = 0;
 
