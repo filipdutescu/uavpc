@@ -49,6 +49,11 @@ namespace uavpc::Drone
               << "\".\n";
   }
 
+  void DjiTelloController::GetBattery()
+  {
+    SendCommand("battery?");
+  }
+
   std::vector<std::string> DjiTelloController::GetCommands(const std::uint16_t &gestures)
   {
     std::vector<std::string> commands;
@@ -107,7 +112,7 @@ namespace uavpc::Drone
     ss << "udp://@" << m_VideoStreamUrl << ":" << m_VideoStreamPort << "?overrun_nonfatal=1&fifo_size=278877";
 
     auto uri = ss.str();
-    auto videoStream = cv::VideoCapture(uri, cv::CAP_GSTREAMER);
+    auto videoStream = cv::VideoCapture(uri, cv::CAP_FFMPEG);
 
     // If GStreamer capture failed, try with the default backend.
     if (!videoStream.isOpened())

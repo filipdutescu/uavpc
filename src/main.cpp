@@ -263,7 +263,7 @@ int main()
   // handTrackerTesting();
 
   // constexpr std::uint8_t busAddress = 0x68;
-  //auto controller = uavpc::Drone::DjiTelloControllerFactory().GetController();
+  // auto controller = uavpc::Drone::DjiTelloControllerFactory().GetController();
 
   //// auto i2cService = std::make_unique<uavpc::Hardware::I2CService>('1', busAddress);
   auto mpu6050 = uavpc::Hardware::Mpu6050(
