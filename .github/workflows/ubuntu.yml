@@ -54,17 +54,12 @@ jobs:
         cmake --build build --config Release -j4
         cmake --build build --target install --config Release
 
-    - name: install the Protobuf library
-      run: sudo apt install -y protobuf-compiler libprotobuf-dev
-
-    - name: install the HDF5 library
-      run: sudo apt install -y libhdf5-dev
-
-    - name: install the Boost library
-      run: sudo apt install -y libboost-all-dev
-
-    - name: install the glog and gflags libraries
-      run: sudo apt install -y libgflags-dev libgoogle-glog-dev
+    - name: install Caffe dependencies
+      run: |
+        sudo apt install -y protobuf-compiler libprotobuf-dev \
+          libhdf5-dev \
+          libboost-all-dev \
+          libgflags-dev libgoogle-glog-dev
 
     - name: install Caffe
       if: steps.cache.outputs.cache-hit != 'true'
