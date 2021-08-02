@@ -22,14 +22,6 @@ namespace uavpc::Trackers
     setGesture(gestures, -distances.Y, s_LeftRightThreshold, Gesture::RIGHT);
   }
 
-  void GestureService::setDown(std::uint16_t& gestures, const Hardware::SensorData& distances) noexcept
-  {
-    if (distances.Z < -s_UpDownThreshold)
-    {
-      gestures |= Gesture::DOWN;
-    }
-  }
-
   void GestureService::setGesture(std::uint16_t& gestures, float value, float threshold, Gesture gesture) noexcept
   {
     if (value >= threshold)
