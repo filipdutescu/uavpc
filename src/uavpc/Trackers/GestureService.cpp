@@ -6,8 +6,8 @@ namespace uavpc::Trackers
 {
   void GestureService::setTilts(std::uint16_t& gestures, const Hardware::SensorData& angles) noexcept
   {
-    setGesture(gestures, -angles.Y, s_TiltUpDownThreshold, Gesture::TILT_DOWN);
-    setGesture(gestures, angles.Y, s_TiltUpDownThreshold, Gesture::TILT_UP);
+    setGesture(gestures, angles.Y, s_TiltUpDownThreshold, Gesture::TILT_DOWN);
+    setGesture(gestures, -angles.Y, s_TiltUpDownThreshold, Gesture::TILT_UP);
     setGesture(gestures, angles.X, s_TiltLeftRightThreshold, Gesture::TILT_LEFT);
     setGesture(gestures, -angles.X, s_TiltLeftRightThreshold, Gesture::TILT_RIGHT);
   }
