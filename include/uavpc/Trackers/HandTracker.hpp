@@ -49,25 +49,7 @@ namespace uavpc::Trackers
      */
     void updateTracker() noexcept;
 
-    /** @brief Used to check if the accelerometer values are inside the threshold indicating significant movement.
-     *  @param[in] accelSum The sum of absolute values of each axis of the accelerometer.
-     *  @returns A boolean value representing whether or not the accelerometer values indicate significant movement.
-     */
-    static bool isAccelInsideThreshold(float accelSum);
-
-    /** @brief Used to check if the gyroscope values are above the threshold indicating significant movement.
-     *  @param[in] gyroSum The sum of absolute values of each axis of the gyroscope.
-     *  @returns A boolean value representing whether or not the gyroscope values indicate significant movement.
-     */
-    static bool isGyroAboveThreshold(float gyroSum);
-
     void updateAngles(const Hardware::SensorData& angles) noexcept;
-
-    void updateDistances(const Hardware::SensorData& distances) noexcept;
-
-    static float computeNewAxisValue(float axisValue, float axisChangeValue, float maximumAxisValue) noexcept;
-
-    static bool isNewValueLowerThanMax(float axisValue, float axisChangeValue, float maximumAxisValue) noexcept;
 
    public:
     /** @brief Contructs a hand tracker using an MPU-6050.

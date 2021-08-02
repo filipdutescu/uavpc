@@ -29,8 +29,6 @@ namespace uavpc::Trackers
       auto accelData = m_Mpu6050.GetRawAccelerometerData();
       auto gyroData = m_Mpu6050.GetRawGyroscopeData();
 
-      // auto distances = accelData * m_DeltaTime;
-
       while (!m_UpdaterMutex.try_lock())
       {
         std::this_thread::sleep_for(s_MutexTryLockWaitTime);
@@ -60,25 +58,11 @@ namespace uavpc::Trackers
       kalmanAngles.Y = kalmanY.GetAngle(accelAngles.Y, gyroAngles.Y, static_cast<float>(m_DeltaTime));
 
       updateAngles(kalmanAngles);
-      // if (isAccelInsideThreshold(accelSum))
-      //{
-      //  updateDistances(distances);
-      //}
 
       auto endTime = clock::now();
       m_DeltaTime = static_cast<double>((endTime - startTime) / 1ms);
       startTime = clock::now();
     }
-  }
-
-  bool HandTracker::isAccelInsideThreshold(float accelSum)
-  {
-    return accelSum > 0.25F && accelSum < 1.0F;
-  }
-
-  bool HandTracker::isGyroAboveThreshold(float gyroSum)
-  {
-    return gyroSum > 0.3F;
   }
 
   void HandTracker::updateAngles(const Hardware::SensorData& angles) noexcept
@@ -91,45 +75,6 @@ namespace uavpc::Trackers
     m_Angles = angles;
 
     m_UpdaterMutex.unlock();
-  }
-
-  void HandTracker::updateDistances(const Hardware::SensorData& distances) noexcept
-  {
-    while (!m_UpdaterMutex.try_lock())
-    {
-      std::this_thread::sleep_for(s_MutexTryLockWaitTime);
-    }
-
-    m_Distances.X = computeNewAxisValue(m_Distances.X, distances.X, s_MaximumAxisDistance);
-    m_Distances.Y = computeNewAxisValue(m_Distances.Y, distances.Y, s_MaximumAxisDistance);
-    m_Distances.Z = computeNewAxisValue(m_Distances.Z, distances.Z, s_MaximumAxisDistance);
-
-    m_UpdaterMutex.unlock();
-  }
-
-  float HandTracker::computeNewAxisValue(float axisValue, float axisChangeValue, float maximumAxisValue) noexcept
-  {
-    auto result = 0.0F;
-    if (isNewValueLowerThanMax(axisValue, axisChangeValue, maximumAxisValue))
-    {
-      result = axisValue + axisChangeValue;
-      if (result > maximumAxisValue)
-      {
-        result = maximumAxisValue;
-      }
-      else if (result < -maximumAxisValue)
-      {
-        result = -maximumAxisValue;
-      }
-    }
-
-    return result;
-  }
-
-  bool HandTracker::isNewValueLowerThanMax(float axisValue, float axisChangeValue, float maximumAxisValue) noexcept
-  {
-    return (axisValue < maximumAxisValue && axisChangeValue > 0.0F) ||
-           (-maximumAxisValue < axisValue && axisChangeValue < 0.0F);
   }
 
   HandTracker::HandTracker(Hardware::Mpu6050 mpu6050, std::shared_ptr<IGestureService> gestureService) noexcept
@@ -160,7 +105,6 @@ namespace uavpc::Trackers
   {
     m_ShouldUpdate = false;
 
-    // TODO: throw exception if cannot join after a number of tries.
     while (!m_UpdaterThread.joinable())
     {
       std::this_thread::sleep_for(s_MutexTryLockWaitTime);
@@ -175,7 +119,6 @@ namespace uavpc::Trackers
 
   Hardware::SensorData HandTracker::GetAngles() noexcept
   {
-    // TODO: throw exception if cannot lock after a number of tries.
     while (!m_UpdaterMutex.try_lock())
     {
       std::this_thread::sleep_for(s_MutexTryLockWaitTime);
@@ -189,7 +132,6 @@ namespace uavpc::Trackers
 
   Hardware::SensorData HandTracker::GetDistances() noexcept
   {
-    // TODO: throw exception if cannot lock after a number of tries.
     while (!m_UpdaterMutex.try_lock())
     {
       std::this_thread::sleep_for(s_MutexTryLockWaitTime);
