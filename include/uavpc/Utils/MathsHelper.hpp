@@ -40,18 +40,6 @@ namespace uavpc::Utils
      *  @returns A new uavpc::Hardware::SensorData instance containing the angles of the one received.
      */
     [[nodiscard]] static Hardware::SensorData ConvertToAngles(const Hardware::SensorData& sensorData) noexcept;
-
-    /** @brief Sum the two sensor data instances, proportionally, with weights computed from the given value tau.
-     *  @param[in] sensorData1 A uavpc::Hardware::SensorData instance, which will be weighted with <tt>1 - tau</tt>.
-     *  @param[in] sensorData2 A uavpc::Hardware::SensorData instance, which will be weighted with <tt>tau</tt>.
-     *  @param[in] tau A double value used to compute the individual weights of each sum operand.
-     *  @returns A uavpc::Hardware::SensorData containing the result of the weighted sum for each axis.
-     */
-    [[nodiscard]] static constexpr Hardware::SensorData
-    WeightedSum(const Hardware::SensorData& sensorData1, const Hardware::SensorData& sensorData2, double tau) noexcept
-    {
-      return sensorData1 * (1.0 - tau) + sensorData2 * tau;
-    }
   };
 }  // namespace uavpc::Utils
 

@@ -131,7 +131,7 @@ jobs:
     - name: run tests
       run: |
         cd build
-        ctest -C $BUILD_TYPE -VV
+        ctest -C $BUILD_TYPE -VV --output-on-failure -j 8
 
     - name: Code coverage using Codecov 
       run: bash <(curl -s https://codecov.io/bash) 
