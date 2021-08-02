@@ -6,18 +6,15 @@
 #include "uavpc/Exceptions/SocketCreationException.hpp"
 
 #include <iostream>
-#ifndef _WIN32
 #include <arpa/inet.h>
 #include <sys/socket.h>
-
 #include <unistd.h>
-#endif
 
 namespace uavpc::Utils
 {
-  UAVPC_SOCKET_TYPE UdpClient::OpenSocket(const std::string& address, std::uint16_t port)
+  int UdpClient::OpenSocket(const std::string& address, std::uint16_t port)
   {
-    UAVPC_SOCKET_TYPE socketId = 0;
+    int socketId = 0;
     sockaddr_in socketData{};
 
     if ((socketId = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
@@ -44,21 +41,16 @@ namespace uavpc::Utils
     return socketId;
   }
 
-  void UdpClient::CloseSocket(UAVPC_SOCKET_TYPE socket)
+  void UdpClient::CloseSocket(int socket)
   {
-#if _WIN32 || _WIN64
-    shutdown(socket, SD_BOTH);
-    if (closesocket(socket) < 0)
-#else
     shutdown(socket, SHUT_RDWR);
     if (close(socket) < 0)
-#endif
     {
       throw Exceptions::SocketClosedException();
     }
   }
 
-  void UdpClient::SendPacket(UAVPC_SOCKET_TYPE socket, const std::string& message)
+  void UdpClient::SendPacket(int socket, const std::string& message)
   {
     if (send(socket, message.c_str(), message.size(), 0) < 0)
     {
@@ -66,7 +58,7 @@ namespace uavpc::Utils
     }
   }
 
-  std::string UdpClient::ReceivePacket(UAVPC_SOCKET_TYPE socket, std::size_t length)
+  std::string UdpClient::ReceivePacket(int socket, std::size_t length)
   {
     char* buffer = new char[length]{ 0 };
 

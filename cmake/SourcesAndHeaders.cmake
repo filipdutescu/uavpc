@@ -69,7 +69,6 @@ set(trackers_sources
 )
 
 set(utils_headers
-  include/uavpc/Utils/CompatibilityMacros.hpp
   include/uavpc/Utils/MathsHelper.hpp
   include/uavpc/Utils/UdpClient.hpp
 )
