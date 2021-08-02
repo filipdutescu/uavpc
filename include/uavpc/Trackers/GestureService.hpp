@@ -20,18 +20,10 @@ namespace uavpc::Trackers
     static constexpr float s_UpDownThreshold = 4.0F;
 
     static void setTilts(std::uint16_t& gestures, const Hardware::SensorData& angles) noexcept;
-    static void setTiltLeft(std::uint16_t& gestures, const Hardware::SensorData& angles) noexcept;
-    static void setTiltRight(std::uint16_t& gestures, const Hardware::SensorData& angles) noexcept;
-    static void setTiltUp(std::uint16_t& gestures, const Hardware::SensorData& angles) noexcept;
-    static void setTiltDown(std::uint16_t& gestures, const Hardware::SensorData& angles) noexcept;
 
     static void setDirections(std::uint16_t& gestures, const Hardware::SensorData& distances) noexcept;
-    static void setForward(std::uint16_t& gestures, const Hardware::SensorData& distances) noexcept;
-    static void setBackward(std::uint16_t& gestures, const Hardware::SensorData& distances) noexcept;
-    static void setLeft(std::uint16_t& gestures, const Hardware::SensorData& distances) noexcept;
-    static void setRight(std::uint16_t& gestures, const Hardware::SensorData& distances) noexcept;
-    static void setUp(std::uint16_t& gestures, const Hardware::SensorData& distances) noexcept;
-    static void setDown(std::uint16_t& gestures, const Hardware::SensorData& distances) noexcept;
+
+    static void setGesture(std::uint16_t& gestures, float value, float threshold, Gesture gesture) noexcept;
 
    public:
     GestureService() = default;

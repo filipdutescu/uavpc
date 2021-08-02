@@ -84,7 +84,6 @@ namespace uavpc::Pose
 
     if (!videoStream.isOpened())
     {
-      // TODO: add custom exception
       throw std::runtime_error("Video stream closed.");
     }
 

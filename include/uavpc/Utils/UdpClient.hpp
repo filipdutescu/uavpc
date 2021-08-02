@@ -1,12 +1,7 @@
 #ifndef UAVPC_UTILS_UDP_CLIENT_HPP_
 #define UAVPC_UTILS_UDP_CLIENT_HPP_
 
-#include "uavpc/Utils/CompatibilityMacros.hpp"
-
 #include <string>
-#ifdef _WIN32
-#include <winsock2.h>
-#endif
 
 namespace uavpc::Utils
 {
@@ -32,20 +27,20 @@ namespace uavpc::Utils
      *  @throw uavpc::Exceptions::SocketCreationException
      *  @returns An integer or SOCKET value representing the socket file descriptor.
      */
-    static UAVPC_SOCKET_TYPE OpenSocket(const std::string& address, std::uint16_t port);
+    static int OpenSocket(const std::string& address, std::uint16_t port);
 
     /** @brief Closes the socket received as a parameter.
      *  @param[in] socket An integer or SOCKET representing a socket file descriptor.
      *  @throw uavpc::Exceptions::SocketClosedException
      */
-    static void CloseSocket(UAVPC_SOCKET_TYPE socket);
+    static void CloseSocket(int socket);
 
     /** @brief Send a UDP packet to a given server socket.
      *  @param[in] socket An integer or SOCKET representing socket file descriptor.
      *  @param[in] message A string containing the packet contents.
      *  @throw uavpc::Exceptions::SocketClosedException
      */
-    static void SendPacket(UAVPC_SOCKET_TYPE socket, const std::string& message);
+    static void SendPacket(int socket, const std::string& message);
 
     /** @brief Try to receive and get the contents of a packet.
      *  @param[in] socket An integer or SOCKET representing the socket file descriptor.
@@ -53,7 +48,7 @@ namespace uavpc::Utils
      *  @throws uavpc::Exceptions::SocketClosedException
      *  @returns A string containing the package contents.
      */
-    static std::string ReceivePacket(UAVPC_SOCKET_TYPE socket, std::size_t length);
+    static std::string ReceivePacket(int socket, std::size_t length);
   };
 }  // namespace uavpc::Utils
 
