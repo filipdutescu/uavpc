@@ -9,9 +9,9 @@
 namespace uavpc::Drone
 {
   DjiTelloController::DjiTelloController(bool connectOnInit)
-      : m_CommandSocket(UAVPC_SOCKET_DEFAULT),
-        m_StateSocket(UAVPC_SOCKET_DEFAULT),
-        m_VideoStreamSocket(UAVPC_SOCKET_DEFAULT)
+      : m_CommandSocket(-1),
+        m_StateSocket(-1),
+        m_VideoStreamSocket(-1)
   {
     if (connectOnInit)
     {
@@ -21,21 +21,21 @@ namespace uavpc::Drone
 
   DjiTelloController::~DjiTelloController()
   {
-    if (m_CommandSocket > UAVPC_SOCKET_DEFAULT)
+    if (m_CommandSocket > -1)
     {
       SendCommand("streamoff");
     }
-    if (m_VideoStreamSocket > UAVPC_SOCKET_DEFAULT)
+    if (m_VideoStreamSocket > -1)
     {
       Utils::UdpClient::CloseSocket(m_VideoStreamSocket);
     }
 
-    if (m_StateSocket > UAVPC_SOCKET_DEFAULT)
+    if (m_StateSocket > -1)
     {
       Utils::UdpClient::CloseSocket(m_StateSocket);
     }
 
-    if (m_CommandSocket > UAVPC_SOCKET_DEFAULT)
+    if (m_CommandSocket > -1)
     {
       Utils::UdpClient::CloseSocket(m_CommandSocket);
     }
@@ -140,7 +140,7 @@ namespace uavpc::Drone
     }
     catch (std::exception &)
     {
-      m_CommandSocket = UAVPC_SOCKET_DEFAULT;
+      m_CommandSocket = -1;
     }
 
     try
@@ -149,7 +149,7 @@ namespace uavpc::Drone
     }
     catch (std::exception &)
     {
-      m_StateSocket = UAVPC_SOCKET_DEFAULT;
+      m_StateSocket = -1;
     }
 
     try
@@ -158,7 +158,7 @@ namespace uavpc::Drone
     }
     catch (std::exception &)
     {
-      m_VideoStreamSocket = UAVPC_SOCKET_DEFAULT;
+      m_VideoStreamSocket = -1;
     }
   }
 }  // namespace uavpc::Drone

@@ -1,7 +1,9 @@
 #include "uavpc/Pose/PoseService.hpp"
 
+#include <ctime>
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
 #include <opencv2/core/types.hpp>
 #include <opencv2/highgui.hpp>
@@ -17,7 +19,8 @@ namespace uavpc::Pose
   PoseService::PoseService() noexcept
       : m_OpenPoseWrapper(op::ThreadManagerMode::Asynchronous),
         m_ShouldRun(false),
-        m_WithRecognition(false)
+        m_WithRecognition(false),
+        m_SaveVideoStream(false)
   {
   }
 
@@ -78,7 +81,39 @@ namespace uavpc::Pose
     m_WithRecognition = !m_WithRecognition;
   }
 
-  void PoseService::StartRecognition(cv::VideoCapture &videoStream)
+  void PoseService::ToggleSaveVideoStream() noexcept
+  {
+    m_SaveVideoStream = !m_SaveVideoStream;
+
+    if (m_ShouldRun)
+    {
+      if (m_SaveVideoStream)
+      {
+        while (m_RecognitionMutex.try_lock())
+        {
+          std::this_thread::sleep_for(s_MutexTryLockWaitTime);
+        }
+        constexpr auto format = "uavpc_%Y%m%d_%H%M%S.mp4";
+        constexpr auto bufferSize = 30U;
+        char buffer[bufferSize] { '\0' };
+
+        std::strftime(buffer, bufferSize, format, std::localtime(nullptr));
+        m_PersistentVideoStream.open(std::string(buffer), cv::VideoWriter::fourcc('M', 'P', '4', 'V'), -1, m_VideoStreamSize);
+        m_RecognitionMutex.unlock();
+      }
+      else
+      {
+        while (m_RecognitionMutex.try_lock())
+        {
+          std::this_thread::sleep_for(s_MutexTryLockWaitTime);
+        }
+        m_PersistentVideoStream.release();
+        m_RecognitionMutex.unlock();
+      }
+    }
+  }
+
+  void PoseService::StartDisplay(cv::VideoCapture &videoStream)
   {
     m_ShouldRun = true;
 
@@ -110,15 +145,27 @@ namespace uavpc::Pose
               {
                 cv::Mat resizedFrame;
                 cv::resize(frame, resizedFrame, cv::Size(width, height));
+                cv::Mat persistentFrame = resizedFrame;
 
                 if (m_WithRecognition)
                 {
                   auto processedFrame = DetectPoseFromFrame(resizedFrame);
                   DisplayFrameWithPose(processedFrame);
+                  persistentFrame = OP_OP2CVCONSTMAT(processedFrame->at(0U)->cvOutputData);
                 }
                 else
                 {
                   cv::imshow("UAVPC", resizedFrame);
+                }
+
+                if (m_SaveVideoStream)
+                {
+                  while (m_RecognitionMutex.try_lock())
+                  {
+                    std::this_thread::sleep_for(s_MutexTryLockWaitTime);
+                  }
+                  m_PersistentVideoStream.write(persistentFrame);
+                  m_RecognitionMutex.unlock();
                 }
               }
             }
@@ -132,7 +179,7 @@ namespace uavpc::Pose
         });
   }
 
-  void PoseService::StopRecognition() noexcept
+  void PoseService::StopDisplay() noexcept
   {
     while (!m_RecognitionMutex.try_lock())
     {

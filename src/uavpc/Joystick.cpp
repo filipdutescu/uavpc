@@ -31,7 +31,7 @@ namespace uavpc
     constexpr auto mutexWaitTime = 0.5s;
 
     auto videoStream = m_DroneController->GetVideoStream();
-    m_PoseService->StartRecognition(videoStream);
+    m_PoseService->StartDisplay(videoStream);
     m_ShouldRun = true;
 
     std::thread runThread(
@@ -77,6 +77,10 @@ namespace uavpc
       {
         m_PoseService->ToggleRecognition();
       }
+      else if (input == "save")
+      {
+        m_PoseService->ToggleSaveVideoStream();
+      }
       else if (input.find_first_of("c ") == 0)
       {
         while (!mutex.try_lock())
@@ -88,7 +92,7 @@ namespace uavpc
       }
     }
 
-    m_PoseService->StopRecognition();
+    m_PoseService->StopDisplay();
     if (runThread.joinable())
     {
       runThread.join();
