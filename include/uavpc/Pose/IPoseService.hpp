@@ -34,9 +34,11 @@ namespace uavpc::Pose
 
     virtual void ToggleRecognition() noexcept = 0;
 
-    virtual void StartRecognition(cv::VideoCapture& videoStream) = 0;
+    virtual void ToggleSaveVideoStream() noexcept = 0;
 
-    virtual void StopRecognition() noexcept = 0;
+    virtual void StartDisplay(cv::VideoCapture& videoStream) = 0;
+
+    virtual void StopDisplay() noexcept = 0;
   };
 }  // namespace uavpc::Pose
 

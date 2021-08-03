@@ -7,6 +7,7 @@
 #include <mutex>
 #include <thread>
 
+#include <opencv2/core/types.hpp>
 #include <opencv2/videoio.hpp>
 
 #include <openpose/wrapper/wrapper.hpp>
@@ -17,13 +18,15 @@ namespace uavpc::Pose
 
   class PoseService : public IPoseService
   {
-    cv::VideoCapture m_VideoStream;
+    cv::Size m_VideoStreamSize;
+    cv::VideoWriter m_PersistentVideoStream;
 
     std::thread m_RecognitionThread;
     std::mutex m_RecognitionMutex;
     op::Wrapper m_OpenPoseWrapper;
     bool m_ShouldRun;
     bool m_WithRecognition;
+    bool m_SaveVideoStream;
 
     static constexpr std::chrono::milliseconds s_MutexTryLockWaitTime = 5ms;
 
@@ -41,9 +44,11 @@ namespace uavpc::Pose
 
     void ToggleRecognition() noexcept override;
 
-    void StartRecognition(cv::VideoCapture& videoStream) override;
+    void ToggleSaveVideoStream() noexcept override;
 
-    void StopRecognition() noexcept override;
+    void StartDisplay(cv::VideoCapture& videoStream) override;
+
+    void StopDisplay() noexcept override;
   };
 }  // namespace uavpc::Pose
 
