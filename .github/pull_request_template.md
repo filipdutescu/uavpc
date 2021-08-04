@@ -59,7 +59,7 @@ screenshots / videos if the pull request changes UI.
 
 See details at [CONTRIBUTING.md](https://github.com/filipdutescu/uavpc/blob/master/CONTRIBUTING.md).
 
-* [ ] I agree to contribute to the project under UAVPC (Unlicense) [License](LICENSE).
+* [ ] I agree to contribute to the project under UAVPC (Apache 2.0) [License](LICENSE).
 
 * [ ] To the best of my knowledge, the proposed patch is not based on a code under
 GPL or other license that is incompatible with UAVPC
