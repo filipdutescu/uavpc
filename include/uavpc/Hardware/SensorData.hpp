@@ -130,6 +130,9 @@ namespace uavpc::Hardware
     }
   };
 
+  /** @brief Write the uavpc::Hardware::SensorData values to the received std::ostream.
+   *  @returns The std::ostream instance received as a parameter.
+   */
   inline std::ostream& operator<<(std::ostream& out, const SensorData& sensorData)
   {
     out << "x: " << sensorData.X << ", y: " << sensorData.Y << ", z: " << sensorData.Z;

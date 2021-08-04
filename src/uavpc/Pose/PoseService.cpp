@@ -47,6 +47,11 @@ namespace uavpc::Pose
         m_RecognitionThread.join();
       }
       m_RecognitionMutex.unlock();
+
+      if (m_SaveVideoStream)
+      {
+        ToggleSaveVideoStream();
+      }
     }
   }
 
@@ -95,10 +100,11 @@ namespace uavpc::Pose
         }
         constexpr auto format = "uavpc_%Y%m%d_%H%M%S.mp4";
         constexpr auto bufferSize = 30U;
-        char buffer[bufferSize] { '\0' };
+        char buffer[bufferSize]{ '\0' };
 
         std::strftime(buffer, bufferSize, format, std::localtime(nullptr));
-        m_PersistentVideoStream.open(std::string(buffer), cv::VideoWriter::fourcc('M', 'P', '4', 'V'), -1, m_VideoStreamSize);
+        m_PersistentVideoStream.open(
+            std::string(buffer), cv::VideoWriter::fourcc('M', 'P', '4', 'V'), -1, m_VideoStreamSize);
         m_RecognitionMutex.unlock();
       }
       else

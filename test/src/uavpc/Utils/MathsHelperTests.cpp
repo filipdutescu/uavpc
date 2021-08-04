@@ -1,5 +1,6 @@
 #include "uavpc/Hardware/SensorData.hpp"
 #include "uavpc/Utils/MathsHelper.hpp"
+
 #include <cmath>
 
 #define CATCH_CONFIG_MAIN
@@ -56,8 +57,9 @@ TEST_CASE("ConvertToAngles returns as expected.", "[single-file]")
   sensorData.Z = value;
   auto expectedResult = uavpc::Hardware::SensorData();
   expectedResult.X = std::atan2(sensorData.Y, sensorData.Z) * radToDeg;
-  expectedResult.Y = std::atan2(-sensorData.X, std::sqrt(sensorData.Y * sensorData.Y + sensorData.Z * sensorData.Z)) * radToDeg;
-  
+  expectedResult.Y =
+      std::atan2(-sensorData.X, std::sqrt(sensorData.Y * sensorData.Y + sensorData.Z * sensorData.Z)) * radToDeg;
+
   const auto result = uavpc::Utils::MathsHelper::ConvertToAngles(sensorData);
 
   REQUIRE_THAT(result.X, WithinAbsMatcher(static_cast<double>(expectedResult.X), 0.001));

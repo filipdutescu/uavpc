@@ -26,7 +26,7 @@ namespace uavpc
      *  @param[in] handTracker A uavpc::Trackers::HandTracker instance used to track a hand and get the current
      *  gestures.
      *  @param[in] poseService A uavpc::Pose::IPoseService instance used to detect and display poses in the video stream of
-     * the drone
+     * the drone.
      */
     explicit Joystick(
         std::shared_ptr<Drone::IController> droneController,

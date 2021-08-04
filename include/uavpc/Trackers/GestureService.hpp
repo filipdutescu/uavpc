@@ -8,7 +8,7 @@
 namespace uavpc::Trackers
 {
   /** @class GestureService
-   *  @implements IGestureService
+   *  @implements uavpc::Trackers::IGestureService
    *  @copybrief uavpc::Trackers::IGestureService
    */
   class GestureService : public IGestureService

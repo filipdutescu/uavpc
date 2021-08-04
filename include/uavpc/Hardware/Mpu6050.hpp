@@ -32,12 +32,12 @@ namespace uavpc::Hardware
 
    public:
     /** @brief Instantiate a new controller for an MPU-6050 found at a given address.
-     * sensor.
-     *  @param[in] II2CService A II2CService implementation to be used to communicate with the device through its bus.
-     *  @param[in] options Optional. A Mpu6050Options instance, containing the configurations and settings for the
-     * sensor.
-     *  @throws I2CUnsupportedException
-     *  @throws InvalidAddressException
+     *  @param[in] II2CService A uavpc::Hardware::II2CService implementation to be used to communicate with the device
+     * through its bus.
+     *  @param[in] options Optional. A uavpc::Hardware::Mpu6050Options instance, containing the configurations and settings
+     * for the sensor.
+     *  @throws uavpc::Exceptions::I2CUnsupportedException
+     *  @throws uavpc::Exceptions::InvalidAddressException
      */
     explicit Mpu6050(std::shared_ptr<II2CService> I2Cservice, Mpu6050Options options = Mpu6050Options());
 
@@ -77,7 +77,7 @@ namespace uavpc::Hardware
      */
     [[nodiscard]] SensorData GetGyroscopeData() const noexcept;
 
-    /** @brief Retrieves the current Mpu6050 options.
+    /** @brief Retrieves the current uavpc::Hardware::Mpu6050 options.
      *  @returns an uavpc::Hardware::Mpu6050Options instance, with the current options.
      */
     [[nodiscard]] Mpu6050Options GetOptions() const noexcept;

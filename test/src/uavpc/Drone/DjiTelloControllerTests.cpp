@@ -1,6 +1,6 @@
-#include "uavpc/Trackers/Gesture.hpp"
 #include "uavpc/Drone/DjiTelloController.hpp"
 #include "uavpc/Drone/DjiTelloControllerFactory.hpp"
+#include "uavpc/Trackers/Gesture.hpp"
 
 #include <string>
 
@@ -103,7 +103,7 @@ TEST_CASE("GetCommands should return a vector of commands if gestures are receiv
   auto result = controller->GetCommands(gestures);
 
   REQUIRE_FALSE(result.empty());
-  REQUIRE_THAT(result, Contains(std::vector<std::string> { "forward 20", "back 20" }));
+  REQUIRE_THAT(result, Contains(std::vector<std::string>{ "forward 20", "back 20" }));
 }
 
 TEST_CASE("GetCommands should return an empty vector if no gestures are received.", "[single-file]")

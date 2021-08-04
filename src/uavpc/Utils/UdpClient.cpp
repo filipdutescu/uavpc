@@ -4,10 +4,10 @@
 #include "uavpc/Exceptions/SocketClosedException.hpp"
 #include "uavpc/Exceptions/SocketConnectionException.hpp"
 #include "uavpc/Exceptions/SocketCreationException.hpp"
-
-#include <iostream>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+
+#include <iostream>
 #include <unistd.h>
 
 namespace uavpc::Utils

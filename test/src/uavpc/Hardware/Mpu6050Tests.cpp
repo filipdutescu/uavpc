@@ -14,9 +14,11 @@ class I2CServiceMock : public uavpc::Hardware::II2CService
 {
   bool m_PopCommandsOnRead;
   bool m_PersistWrite;
-public:
+
+ public:
   explicit I2CServiceMock(bool persistWrite = false, bool popCommandsOnRead = true)
-    : m_PersistWrite(persistWrite), m_PopCommandsOnRead(popCommandsOnRead)
+      : m_PersistWrite(persistWrite),
+        m_PopCommandsOnRead(popCommandsOnRead)
   {
   }
 

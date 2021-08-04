@@ -1,6 +1,6 @@
+#include "uavpc/Hardware/SensorData.hpp"
 #include "uavpc/Trackers/Gesture.hpp"
 #include "uavpc/Trackers/GestureService.hpp"
-#include "uavpc/Hardware/SensorData.hpp"
 
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
