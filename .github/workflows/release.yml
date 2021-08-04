@@ -12,46 +12,11 @@ env:
 
 jobs:
   build:
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-        - {
-            name: "Windows Latest MSVC",
-            artifact_ext: '.zip',
-            os: windows-latest,
-            cc: "cl",
-            cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-          }
-        - {
-            name: "Ubuntu Latest GCC",
-            artifact_ext: '.tar.gz',
-            os: ubuntu-latest,
-            cc: "gcc",
-            cxx: "g++",
-          }
-        - {
-            name: "macOS Latest Clang",
-            artifact_ext: '.tar.gz',
-            os: macos-latest,
-            cc: "clang",
-            cxx: "clang++",
-          }
+    runs-on: ubuntu-latest
 
     steps:
-    - name: set version name (Windows)
-      id: version_win
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        $TAG = (${env:GITHUB_REF} -replace 'refs/tags/', '')
-        echo "::set-output name=name::$TAG"
-    
     - name: set version name
       id: version
-      if: ${{ runner.os != 'Windows' }}
       run: echo ::set-output name=name::${GITHUB_REF#refs/tags/}
 
     - name: Checkout
@@ -66,53 +31,110 @@ jobs:
         path: ${{ github.HOME }}/.local
         key: ${{ runner.os }}-dependencies
 
-    - name: install GoogleTest
-      if: ${{ steps.cache.output.cache-hit != 'true' }}
+    - name: install Catch2
+      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         cd ..
-        git clone https://github.com/google/googletest.git --branch release-1.10.0
-        cd googletest
-        cmake -Bbuild -DCMAKE_INSTALL_PREFIX="$HOME/.local" -Dgtest_force_shared_crt=1
-        cmake --build build --config Release
+        git clone https://github.com/catchorg/catch2.git --branch v2.13.4
+        cd catch2
+        cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} \
+          -DCATCH_INSTALL_DOCS:BOOL=OFF -DCATCH_INSTALL_EXTRAS:BOOL=OFF -DCATCH_BUILD_TESTING=OFF
+        cmake --build build --config Release -j4
         cmake --build build --target install --config Release
 
+    - name: install OpenBLAS
+      run: sudo apt install -y libopenblas-dev
+    
+    - name: install OpenCV
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        cd ..
+        git clone https://github.com/opencv/opencv.git --branch 4.5.0
+        cd opencv
+        cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} \
+          -DBUILD_LIST=videoio,video,core,highgui,imgcodecs,calib3d,dnn,objdetect,features2d \
+          -DBUILD_PERF_TESTS:BOOL=OFF -DBUILD_TESTS:BOOL=OFF -DBUILD_DOCS:BOOL=OFF -DBUILD_EXAMPLES:BOOL=OFF \
+          -DBUILD_opencv_apps:BOOL=OFF \
+          -DBUILD_FAT_JAVA_LIB:BOOL=OFF -DBUILD_JAVA:BOOL=OFF
+        cmake --build build --config Release -j4
+        cmake --build build --target install --config Release
+
+    - name: install Caffe dependencies
+      run: |
+        sudo apt install -y protobuf-compiler libprotobuf-dev \
+          libhdf5-dev \
+          libboost-all-dev \
+          libgflags-dev libgoogle-glog-dev
+
+    - name: install Caffe
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        cd ..
+        git clone https://github.com/CMU-Perceptual-Computing-Lab/caffe.git
+        git clone https://aur.archlinux.org/caffe.git caffe-patch
+        cd caffe
+        cp -v ../caffe-patch/caffe-1.0-opencv4-fix.patch .
+        patch -d . -Np1 -i ./caffe-1.0-opencv4-fix.patch || echo "Patch applied"
+        cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} \
+            -DBLAS=open \
+            -DCPU_ONLY=ON \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_docs=OFF \
+            -DBUILD_python=OFF \
+            -DBUILD_python_layer=OFF \
+            -DUSE_LEVELDB=OFF \
+            -DUSE_LMDB=OFF \
+            -DUSE_OPENCV=ON
+        cmake --build build --config Release -j4
+        cmake --build build --target install --config Release
+
+    - name: link Caffe lib to /usr/lib (OpenPose bug)
+      run: sudo ln -s ${{ github.workspace }}/${{ env.install_location }}/lib/libcaffe.so /usr/lib/libcaffe.so
+
+    - name: install OpenPose
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        cd ..
+        git clone https://github.com/CMU-Perceptual-Computing-Lab/openpose.git --branch v1.7.0
+        cd openpose
+        cp -v ../uavpc/vendor/openpose-opencv4.patch .
+        patch -d . -Np1 -i ./openpose-opencv4.patch
+        cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} \
+          -DCMAKE_BUILD_TYPE:STRING="Release" \
+          -DBUILD_CAFFE:BOOL=OFF \
+          -DCaffe_INCLUDE_DIRS:PATH=${{ github.workspace }}/${{ env.install_location }}/include \
+          -DCaffe_LIBS:PATH=${{ github.workspace }}/${{ env.install_location }}/lib/libcaffe.so \
+          -DGPU_MODE:STRING=CPU_ONLY \
+          -DDOWNLOAD_BODY_25_MODEL:BOOL=OFF \
+          -DDOWNLOAD_BODY_MPI_MODEL:BOOL=ON \
+          -DDOWNLOAD_FACE_MODEL:BOOL=OFF \
+          -DDOWNLOAD_HAND_MODEL:BOOL=OFF \
+          -DBUILD_EXAMPLES:BOOL=OFF \
+          -DBUILD_PYTHON:BOOL=OFF \
+          -DBUILD_SHARED_LIBS:BOOL=OFF
+        cmake --build build --config Release -j4
+        cmake --build build --target install --config Release
+
+    - name: install I2C Linux kernel headers
+      run: sudo apt install -y libi2c-dev
+
     - name: configure
-      run: cmake -Bbuild -DCMAKE_INSTALL_PREFIX="$HOME/.local"
+      run: |
+        cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/${{ env.install_location }} \
+          -DCMAKE_BUILD_TYPE:STRING=${{ env.build_type }} \
+          -Duavpc_ENABLE_CODE_COVERAGE=1 \
+          -Duavpc_ENABLE_DOXYGEN=0
       
     - name: build
-      run: cmake --build build --config "$env:BUILD_TYPE" -j4
-
-    - name: run tests
-      run: |
-        cd build
-        ctest -C "$env:BUILD_TYPE" -VV
-
-    # for a release not containing directly the source code, replace the files archived
-    # with the actual files needed (i.e. *.lib/*.a and *.h(pp))
-
-    - name: generate archive (Windows)
-      if: ${{ runner.os == 'Windows' }}
-      run: |
-        cd $env:BIN_FILES_PATH
-        7z a -tzip $HOME/artifact.zip *
-
+      run: cmake --build build --config ${{ env.build_type }} -j4
 
     - name: generate archive
-      if: ${{ runner.os != 'Windows' }}
       run: |
         cd $BIN_FILES_PATH
         tar -cvzf $HOME/artifact.tar.gz .
 
     - name: upload artifacts
       uses: actions/upload-artifact@v2
-      if: ${{ runner.os == 'Windows' }}
-      with:
-        name: ${{ runner.os }}-${{ steps.version_win.outputs.name }}
-        path: '~/artifact.*'
-
-    - name: upload artifacts
-      uses: actions/upload-artifact@v2
-      if: ${{ runner.os != 'Windows' }}
       with:
         name: ${{ runner.os }}-${{ steps.version.outputs.name }}
         path: '~/artifact.*'
@@ -156,34 +178,3 @@ jobs:
         asset_name: "${{ env.PROJECT_NAME }}-Linux-${{ steps.version.outputs.name }}.tar.gz"
         asset_content_type: application/x-tar
 
-    - name: download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: "Windows-${{ steps.version.outputs.name }}"
-        path: ./
-
-    - name: upload windows release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: "artifact.zip"
-        asset_name: "${{ env.PROJECT_NAME }}-Windows-${{ steps.version.outputs.name }}.zip"
-        asset_content_type: application/zip
-
-    - name: download artifact
-      uses: actions/download-artifact@v2
-      with:
-        name: "macOS-${{ steps.version.outputs.name }}"
-        path: ./
-
-    - name: upload macos release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: "./artifact.tar.gz"
-        asset_name: "${{ env.PROJECT_NAME }}-macOS-${{ steps.version.outputs.name }}.tar.gz"
-        asset_content_type: application/x-tar
