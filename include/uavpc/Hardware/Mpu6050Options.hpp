@@ -11,7 +11,7 @@ namespace uavpc::Hardware
   using HWGyroscopeRange = Hardware::GyroscopeRange;
 
   /** @class Mpu6050Options
-   *  @brief Configuration options for an Mpu6050 instance.
+   *  @brief Configuration options for an uavpc::Hardware::Mpu6050 instance.
    *
    * Contains the register addresses needed for basic operation of the MPU-6050 MEMS, as described by its Register Map.
    * It also provides the ranges for both the accelerometer and the gyroscope.

@@ -20,7 +20,7 @@ TEST_CASE("GetAngle works as expected.", "[single-file]")
 {
   constexpr auto initAngle = 10.0F;
   constexpr auto newAngle = 20.0F;
-  constexpr auto expectedAngle = initAngle + (newAngle - initAngle ) * ((initAngle * 1.0F) / (initAngle * 1.0F + 0.03F));
+  constexpr auto expectedAngle = initAngle + (newAngle - initAngle) * ((initAngle * 1.0F) / (initAngle * 1.0F + 0.03F));
   auto sut = uavpc::Trackers::KalmanFilter();
   sut.SetAngle(initAngle);
 

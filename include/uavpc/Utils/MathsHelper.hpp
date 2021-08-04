@@ -14,7 +14,7 @@ namespace uavpc::Utils
     static constexpr float s_RadToDeg = 57.2957914331F;
 
    public:
-    /** @brief Round the received SensorData to the given number of decimals.
+    /** @brief Round the received uavpc::Hardware::SensorData to the given number of decimals.
      *  @param[in] sensorData The uavpc::Hardware::SensorData to be rounded.
      *  @param[in] precision Default: 3. The precision the values should be rounded to.
      *  @returns A new uavpc::Hardware::SensorData instance containing the rounded values.
@@ -35,7 +35,7 @@ namespace uavpc::Utils
       return sensorData;
     }
 
-    /** @brief Convert the sensor data to angles measured in degrees.
+    /** @brief Convert the received uavpc::Hardware::SensorData to angles measured in degrees.
      *  @param[in] sensorData The uavpc::Hardware::SensorData who's values are to be converted to angles.
      *  @returns A new uavpc::Hardware::SensorData instance containing the angles of the one received.
      */

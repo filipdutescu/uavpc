@@ -1,9 +1,10 @@
-#include "uavpc/Trackers/Gesture.hpp"
-#include "uavpc/Trackers/HandTracker.hpp"
 #include "uavpc/Hardware/II2CService.hpp"
 #include "uavpc/Hardware/Mpu6050.hpp"
 #include "uavpc/Hardware/SensorData.hpp"
+#include "uavpc/Trackers/Gesture.hpp"
+#include "uavpc/Trackers/HandTracker.hpp"
 #include "uavpc/Trackers/IGestureService.hpp"
+
 #include <memory>
 
 #define CATCH_CONFIG_MAIN
@@ -13,7 +14,7 @@ using Catch::Matchers::Floating::WithinAbsMatcher;
 
 class I2CServiceMock : public uavpc::Hardware::II2CService
 {
-public:
+ public:
   explicit I2CServiceMock() = default;
 
   [[nodiscard]] std::int32_t ReadByteData(std::uint8_t registerAddress) const noexcept override
@@ -33,13 +34,13 @@ public:
 
 class GestureServiceMock : public uavpc::Trackers::IGestureService
 {
-public:
-    [[nodiscard]] virtual std::uint16_t ParseGesturesFrom(
-        const uavpc::Hardware::SensorData& distances,
-        const uavpc::Hardware::SensorData& angles) const noexcept
-    {
-      return 0U | uavpc::Trackers::Gesture::BACKWARD;
-    }
+ public:
+  [[nodiscard]] virtual std::uint16_t ParseGesturesFrom(
+      const uavpc::Hardware::SensorData& distances,
+      const uavpc::Hardware::SensorData& angles) const noexcept
+  {
+    return 0U | uavpc::Trackers::Gesture::BACKWARD;
+  }
 };
 
 TEST_CASE("GetAngles returns as expected.", "[single-file]")

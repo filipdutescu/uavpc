@@ -47,6 +47,7 @@ namespace uavpc::Drone
     virtual std::vector<std::string> GetCommands(const std::uint16_t& gestures) = 0;
 
     /** @brief Get an OpenCV VideoCapture instace to capture the video stream of the drone.
+     *  @throws uavpc::Exceptions::SocketClosedException if the connection to the drone could note be estableshed.
      *  @returns A cv::VideoCapture instance, which is configured to capture the video stream of the drone.
      */
     [[nodiscard]] virtual cv::VideoCapture GetVideoStream() = 0;

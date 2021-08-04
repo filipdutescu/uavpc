@@ -38,16 +38,28 @@ namespace uavpc::Pose
     PoseService& operator=(PoseService&&) = delete;
     ~PoseService() override;
 
+    /** @copydoc uavpc::Pose::IPoseService::DetectPoseFromFrame()
+     */
     TDatumsSP DetectPoseFromFrame(const cv::Mat& frame) noexcept override;
 
+    /** @copydoc uavpc::Pose::IPoseService::DisplayFrameWithPose()
+     */
     void DisplayFrameWithPose(const TDatumsSP& frame) noexcept override;
 
+    /** @copydoc uavpc::Pose::IPoseService::ToggleRecognition()
+     */
     void ToggleRecognition() noexcept override;
 
+    /** @copydoc uavpc::Pose::IPoseService::ToggleSaveVideoStream()
+     */
     void ToggleSaveVideoStream() noexcept override;
 
+    /** @copydoc uavpc::Pose::IPoseService::StartDisplay()
+     */
     void StartDisplay(cv::VideoCapture& videoStream) override;
 
+    /** @copydoc uavpc::Pose::IPoseService::StopDisplay()
+     */
     void StopDisplay() noexcept override;
   };
 }  // namespace uavpc::Pose
