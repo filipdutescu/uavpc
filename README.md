@@ -65,21 +65,8 @@ to run:
 git clone https://github.com/filipdutescu/uavpc.git
 ```
 
-To build the project, you can run either
-
-```bash
-make release
-```
-
-or
-
-```bash
-cmake -Bbuild -DCMAKE_BUILD_TYPE=Release
-cmake --build build --config Release
-```
-
-To install an already built project, you need to run the `install` target with CMake.
-For example:
+To install an [already built project](README.md#Building-the-project), you need
+to run the `install` target with CMake. For example:
 
 ```bash
 cmake --build build --target install --config Release
@@ -93,6 +80,8 @@ or
 ```bash
 make install
 ```
+
+which will also build the project.
 
 ## Building the project
 
