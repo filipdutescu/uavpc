@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_NAME: "uavpc"
-  BUILD_TYPE: Release
+  build_type: Release
   BIN_FILES_PATH: build/bin/Release
 
 jobs:
