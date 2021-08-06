@@ -29,8 +29,8 @@ jobs:
       uses: actions/cache@v2
       id: cache
       with:
-        path: ${{ github.HOME }}/.local
-        key: ${{ runner.os }}-release-dependencies
+        path: ${{ github.workspace }}/${{ env.install_location }}
+        key: ${{ runner.os }}-release-dependencies-v1
 
     - name: install Catch2
       if: steps.cache.outputs.cache-hit != 'true'
