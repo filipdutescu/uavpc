@@ -9,6 +9,7 @@ env:
   PROJECT_NAME: "uavpc"
   build_type: Release
   BIN_FILES_PATH: build/bin/Release
+  install_location: .local
 
 jobs:
   build:
@@ -29,7 +30,7 @@ jobs:
       id: cache
       with:
         path: ${{ github.HOME }}/.local
-        key: ${{ runner.os }}-dependencies
+        key: ${{ runner.os }}-release-dependencies
 
     - name: install Catch2
       if: steps.cache.outputs.cache-hit != 'true'
@@ -127,6 +128,14 @@ jobs:
       
     - name: build
       run: cmake --build build --config ${{ env.build_type }} -j4
+
+    - name: run tests
+      run: |
+        cd build
+        ctest -C $BUILD_TYPE -VV --output-on-failure -j 8
+
+    - name: install project
+      run: cmake --build build --target install --config ${{ env.build_type }} 
 
     - name: generate archive
       run: |
